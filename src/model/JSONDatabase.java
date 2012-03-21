@@ -123,6 +123,17 @@ public class JSONDatabase
 		}
 		return entry;
 	}
+	
+	
+	public JSONObject get(String key){
+		try {
+			return jsonObject.getJSONObject(key);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
     
     /**
      * 
