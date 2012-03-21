@@ -1,8 +1,8 @@
 Project for ETSF01
 
-******************
+************************************
 FOLDERS
-******************
+************************************
 
 files: 
 	database files, input files and output files
@@ -12,14 +12,20 @@ tools:
 	simple shell script for exporting the project to a jar-file
 
 
-******************
+************************************
 PACKAGES
-******************
+************************************
 
 model: 
 	JSONDatabase: Reads input from 'files/databaseIN.txt' and adds it to a JSONObject
 	
 
+************************************
+EXAMPLE USE OF JSON
+************************************
+
+JSONObject json = JSONDatabase.getInstance().get(int index); // Retrieves the entire project
+json.get("column name"); // Will return the value corresponding to the column name
 
 
 
