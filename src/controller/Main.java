@@ -20,7 +20,7 @@ public class Main {
 	 * Public methods
 	 *********************************************/
 	public void run() {
-		System.out.println(JSONDatabase.getInstance().getJSONValueForKey("1").toString());
+		System.out.println(JSONDatabase.getInstance().getJSONValueForKey("1"));
 		System.out.println(JSONDatabase.getInstance().getJSONValueForKey("2").toString());
 		System.out.println(JSONDatabase.getInstance().getJSONValueForKey("59").toString());
 ////		System.out.println(JSONDatabase.getInstance().getJSONValueForKey("DATA"));
