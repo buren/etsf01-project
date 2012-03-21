@@ -23,11 +23,10 @@ model:
 ************************************
 **EXAMPLE USE OF JSON**
 ************************************
-```javascript
+
+```java
 // Retrieves the entire project
 JSONObject json = JSONDatabase.getInstance().get(int index);
 // Will return the value corresponding to the column name
 json.get("column name"); 
 ```
-
-
