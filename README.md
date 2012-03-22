@@ -16,9 +16,21 @@ tools:
 **PACKAGES**
 ************************************
 
-model: 
+**model:**
 	JSONDatabase: Reads input from 'files/databaseIN.txt' and adds it to a JSONObject
 	
+**controller:** 
+	EffortEstimation: This is where the similarity function and time estimation is done. 
+
+**view:**
+	GUI: The visual assets. 
+	
+**conversion:**
+	Converter: Converts between units person-, -hours, -days, -months, -years
+
+**tests:** 
+ 	Package with all tests.
+ 	
 
 ************************************
 **EXAMPLE USE OF JSON**
