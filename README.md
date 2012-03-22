@@ -25,8 +25,10 @@ model:
 ************************************
 
 ```java
-// Retrieves the entire project
-JSONObject json = JSONDatabase.getInstance().get(int index);
-// Will return the value corresponding to the column name
-json.get("column name"); 
+// Retrieves the entire project list
+JSONObject json = JSONDatabase.getInstance();
+// Retrieve a single project
+JSONObject singleProjectJson = json.get(int index); 
+// Get the value correspnding for the specified column 
+singleProjectJson.get("column name");
 ```

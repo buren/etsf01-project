@@ -50,7 +50,7 @@ public class JSONDatabase
 			Integer index = 0;
 			while(line!=null)
 			{
-				String[] lineAttributes = line.split(DELIMITER);
+				String[] lineAttributes = line.toLowerCase().split(DELIMITER);
 				// Every element in rowMap is the corresponding data for one single line
 				HashMap<String, String> projectMap = new HashMap<String, String>(); 
 				for (int i = 0; i < 17; i++){
@@ -69,17 +69,19 @@ public class JSONDatabase
 					while (itr.hasNext()) jsonObject.put(str, itr.next());
 				} catch (JSONException e) {
 					e.printStackTrace();
-				}  
-				line = reader.readLine().toLowerCase();
+				} 
+				line = reader.readLine();
+				if (line == null) break;
+				else line.toLowerCase();
 				index += 1;
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.err.println("Cannot read files/database.txt file");
+			System.err.println("Cannot read " + DATABASE_INPUT_PATH  + " file");
 			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("Cannot read files/database.txt file");
+			System.err.println("Cannot read " + DATABASE_INPUT_PATH  + " file");
 			System.exit(1);
 		}
     }
@@ -111,12 +113,14 @@ public class JSONDatabase
 	 * @param key - key for the project
 	 * @return - the entire project as a {@link JSONObject}
 	 */
-	public JSONObject getProjectAsJSONObject(String key){
-		try {
-			return jsonObject.getJSONObject(key);
-		} catch (JSONException e) {
-			System.out.println("Key not found!");
-			e.printStackTrace();
+	public JSONObject getProjectAsJSONObject(String key) {
+		if (jsonObject.has(key)) {
+			try {
+				return jsonObject.getJSONObject(key);
+			} catch (JSONException e) {
+				System.out.println("Key not found!");
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
