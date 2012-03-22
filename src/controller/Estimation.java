@@ -4,14 +4,7 @@ import org.json.JSONObject;
 
 public class Estimation {
 
-	/*********************************************
-	 * PUBLIC CONSTANTS
-	 *********************************************/
-	public static final int PERSON_HOURS = 1;
-	public static final int PERSON_DAYS = 2;
-	public static final int PERSON_MONTHS = 3;
-	public static final int PERSON_YEARS = 4;
-
+	
 
 	/*********************************************
 	 * CLASS OBJECTS

@@ -7,11 +7,7 @@ public class Converter {
 	/*********************************************
 	 * PUBLIC CONSTANTS
 	 *********************************************/
-	public static final int PERSON_HOURS = 1;
-	public static final int PERSON_DAYS = 24;
-	public static final int PERSON_MONTHS = 720;
-	public static final int PERSON_YEARS = 262800;
-
+	
 	public static final int HOURS = 0;
 	public static final int DAYS = 1;
 	public static final int MONTHS = 2;
@@ -52,6 +48,7 @@ public class Converter {
 			normalizedValue = value * HOURS_IN_YEAR;
 			break;
 		default: 
+			System.out.println("Invalid input to converter!");
 			normalizedValue = value;
 			break;
 		}
@@ -65,7 +62,7 @@ public class Converter {
 	 * @return a double value in the unit Person-days.
 	 */
 	public static double convertToDays(int currentUnit, double value){
-		return convertToHours(currentUnit, value)/HOURS_IN_DAY;
+		return convertToHours(currentUnit, value);
 	}
 	
 	/**
@@ -75,7 +72,7 @@ public class Converter {
 	 * @return a double value in the unit Person-months.
 	 */
 	public static double convertToMonths(int currentUnit, double value){
-		return convertToHours(currentUnit, value)/HOURS_IN_MONTH;
+		return convertToHours(currentUnit, value);
 	}
 	
 	/**
@@ -85,7 +82,6 @@ public class Converter {
 	 * @return a double value in the unit Person-months.
 	 */
 	public static double convertToYears(int currentUnit, double value){
-		return convertToHours(currentUnit, value)/HOURS_IN_YEAR;
+		return convertToHours(currentUnit, value);
 	}
-	
 }
