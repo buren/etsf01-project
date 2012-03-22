@@ -126,7 +126,7 @@ public class JSONDatabase
 	}
 	
 	  /**
-     * 
+     * Returns the object associated with the key. 
      * @param key	identifier key 
      * @return 		value of object associated with key
      */
@@ -165,7 +165,7 @@ public class JSONDatabase
     }
     
     /** 
-    * Returns the enture json object as a string.
+    * Returns the entire JSONObject as a string.
     * @return the jsonObject as a string
     */
     public String print() {

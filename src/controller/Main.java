@@ -1,5 +1,7 @@
 package controller;
 
+import model.JSONDatabase;
+
 public class Main {
 
 
@@ -19,5 +21,7 @@ public class Main {
 	 * Public methods
 	 *********************************************/
 	public void run() {
+		JSONDatabase json = JSONDatabase.getInstance();
+		System.out.println(json.print());
 	}
 }
