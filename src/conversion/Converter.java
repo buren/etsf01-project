@@ -1,6 +1,5 @@
 package conversion;
 
-import controller.Estimation;
 
 public class Converter {
 
