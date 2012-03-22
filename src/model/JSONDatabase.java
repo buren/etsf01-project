@@ -31,7 +31,9 @@ public class JSONDatabase
 	/**
 	 *  Private constructor prevents instantiation from other classes
 	 *  Reads the database file specified in the DATABASE_INPUT_PATH above
-	 *  and instantiates a new JSONObject from its content
+	 *  and instantiates a new JSONObject from its content all strings are
+	 *  converted to lower case.
+	 *  
 	 */
     private JSONDatabase() 
     {
@@ -43,8 +45,8 @@ public class JSONDatabase
 			
 			// HashMap<String, String> where key is the type and value is the column data
 			// Reads the first line that contains the types of every column
-			String[] types = reader.readLine().split(DELIMITER);
-			String line = reader.readLine();
+			String[] types = reader.readLine().toLowerCase().split(DELIMITER);
+			String line = reader.readLine().toLowerCase();
 			Integer index = 0;
 			while(line!=null)
 			{
@@ -68,7 +70,7 @@ public class JSONDatabase
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}  
-				line = reader.readLine();
+				line = reader.readLine().toLowerCase();
 				index += 1;
 			}
 		} catch (FileNotFoundException e) {
@@ -103,39 +105,23 @@ public class JSONDatabase
     /*********************************************
 	 * Getters
 	 *********************************************/
-    /**
-	 * Returns entry in JSON databse from key. Ignores case.
-	 * @param key
-	 * @return
+   
+	/**
+	 * Returns the entire specified project and returns it as a {@link JSONObject}.
+	 * @param key - key for the project
+	 * @return - the entire project as a {@link JSONObject}
 	 */
-	public JSONObject getEntry(String key) {
-		JSONObject entry = null;
-		entry = (JSONObject) getJSONValueForKey(key);
-		if (entry == null && key.split(" ").length > 1) {
-			String[] nameArr = key.split(" ");
-			key = nameArr[0].substring(0, 1).toUpperCase() + nameArr[0].substring(1) + " "
-				+ nameArr[1].substring(0, 1).toUpperCase() + nameArr[1].substring(1);
-			entry = (JSONObject) getJSONValueForKey(key);
-		}
-		if (entry == null) {
-			key = key.toUpperCase();
-			entry = (JSONObject) getJSONValueForKey(key);
-		}
-		return entry;
-	}
-	
-	
-	public JSONObject get(String key){
+	public JSONObject getProjectAsJSONObject(String key){
 		try {
 			return jsonObject.getJSONObject(key);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Key not found!");
 			e.printStackTrace();
 		}
 		return null;
 	}
-    
-    /**
+	
+	  /**
      * 
      * @param key	identifier key 
      * @return 		value of object associated with key
@@ -152,82 +138,11 @@ public class JSONDatabase
     	}
     	return null;
     }
-    
+
+
     /***********************************************************
      * Misc. methods
      **********************************************************/
-    
-    /**
-     * Puts value in the database with the key key. For testing purposes only.
-     * @param key
-     * @param value
-     */
-    public void put(String key, Object value) {
-    	try {
-			jsonObject.put(key, value);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    /**
-     * Replaces the entry for row key with the String 
-     * @param key Name of the patient
-     * @param value The value
-     * @throws JSONException if key is not in database
-     */
-    public void writeDatabase(String key, String value) throws JSONException {
-    	JSONObject entry = null;
-    	try {
-    		entry = (JSONObject) jsonObject.get(key);
-    	} catch (JSONException e) {
-    		String[] nameArr = key.split(" ");
-			key = nameArr[0].substring(0, 1).toUpperCase() + nameArr[0].substring(1) + " "
-				+ nameArr[1].substring(0, 1).toUpperCase() + nameArr[1].substring(1);
-			entry = (JSONObject) getJSONValueForKey(key);
-			
-    	}
-    	entry.put("Row", value);
-    	writeJSONtoFile();
-    }
-
-    /**
-    * Creates a new row 
-	* @param projectName Name of the project
-	* @param projectAttributes a HashMap<String, String> containing the projectAttributes to be written
-	*/
-    public void createNewProject(String projectName, HashMap<String, String> projectAttributes){
-    	try {
-			jsonObject.accumulate(projectName, projectAttributes);
-			writeJSONtoFile();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-    }
-  
-    /**
-     * Removes the entry called key from the database.
-     * @param key
-     * @return true if entry was removed, false if it does not exist
-     */
-    public boolean deleteEntry(String key) {
-    	JSONObject entry = null;
-		entry = (JSONObject) getJSONValueForKey(key);
-		if (entry == null && key.split(" ").length > 1) {
-			String[] nameArr = key.split(" ");
-			key = nameArr[0].substring(0, 1).toUpperCase() + nameArr[0].substring(1) + " "
-				+ nameArr[1].substring(0, 1).toUpperCase() + nameArr[1].substring(1);
-			entry = (JSONObject) getJSONValueForKey(key);
-		}
-		if (entry == null) {
-			key = key.toUpperCase();
-			entry = (JSONObject) getJSONValueForKey(key);
-		}
-    	entry = (JSONObject) jsonObject.remove(key);
-    	writeJSONtoFile();
-    	return entry != null;
-    }
     
 
     /**
@@ -246,7 +161,8 @@ public class JSONDatabase
     }
     
     /** 
-    * Prints the json object
+    * Returns the enture json object as a string.
+    * @return the jsonObject as a string
     */
     public String print() {
     	return jsonObject.toString();

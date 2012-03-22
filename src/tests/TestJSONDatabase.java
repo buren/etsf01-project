@@ -12,7 +12,7 @@ import model.JSONDatabase;
 public class TestJSONDatabase extends TestCase{
 
 	/*********************************************
-	 *  PRIVATE STATIC VARIABLES
+	 *  PRIVATE STATIC CONSTANTS
 	 *********************************************/
 	
 	private static final String TEST_STRING_RELY_FOR_FIRST_LINE = "Nominal";
@@ -24,7 +24,7 @@ public class TestJSONDatabase extends TestCase{
 	
 
 	/*********************************************
-	 * VARIABLES
+	 * CLASS OBJECTS
 	 *********************************************/
 	
 	private JSONObject firstJSON;
@@ -32,8 +32,8 @@ public class TestJSONDatabase extends TestCase{
 	
 	@Before
 	public void setUp(){
-		 firstJSON= JSONDatabase.getInstance().get(FIRST_LINE_INDEX);
-		 lastJSON = JSONDatabase.getInstance().get(LAST_LINE_INDEX);
+		 firstJSON= JSONDatabase.getInstance().getProjectAsJSONObject(FIRST_LINE_INDEX);
+		 lastJSON = JSONDatabase.getInstance().getProjectAsJSONObject(LAST_LINE_INDEX);
 	}
 	
 	@Test
