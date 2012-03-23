@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import model.JSONDatabase;
 
 public class Main {
@@ -23,5 +26,6 @@ public class Main {
 	public void run() {
 		JSONDatabase json = JSONDatabase.getInstance();
 		System.out.println(json.print());
+		
 	}
 }

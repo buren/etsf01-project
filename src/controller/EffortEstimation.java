@@ -30,7 +30,7 @@ public class EffortEstimation {
 	}
 	
 	/**
-	 * Constructor when user doesn't specify the threhold. Threshold defaults to 0.5
+	 * Constructor when user doesn't specify the threshold. Threshold defaults to 0.5
 	 * @param database the database for all done projects read from file.
 s	 */
 	public EffortEstimation(JSONObject database){
