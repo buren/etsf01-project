@@ -43,7 +43,7 @@ s	 */
 	 * @param futureProject
 	 */
 	public void calculateSimilarity(JSONObject futureProject){
-		
+
 	}
 	
 	/**
