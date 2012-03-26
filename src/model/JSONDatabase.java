@@ -15,18 +15,19 @@ import org.json.*;
 public class JSONDatabase 
 {
 
-	private static final int OFFSET_DATABASE_SECOND = 6;
+	
 	/*********************************************
 	 * private constants
 	 *********************************************/
 	private static final String DATABASE_INPUT_PATH_FIRST = "files/databaseINalt1.txt";
 	private static final String DATABASE_INPUT_PATH_SECOND = "files/databaseINalt2.txt";
-	private static final String DATABASE_INPUT_PATH_THIRD = "files/databaseINalt3.txt";
+//	private static final String DATABASE_INPUT_PATH_THIRD = "files/databaseINalt3.txt";
 	private static final int PATH_FIRST = 1;
 	private static final int PATH_SECOND = 2;
 	private static final int PATH_THIRD = 3;
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
 	private static final String DELIMITER = ",";
+	private static final int OFFSET_DATABASE_SECOND = 7;
 	private static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 			"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
 			"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
@@ -36,8 +37,7 @@ public class JSONDatabase
 	 *********************************************/
 	private JSONObject jsonObject;
 	private Integer index;
-	private ArrayList<HashMap<String, String>> rowList;
-;
+	ArrayList<HashMap<String, String>> rowList;
 		
 	/*********************************************
 	 * Constructors
@@ -52,6 +52,7 @@ public class JSONDatabase
 	 */
     private JSONDatabase() {
     	index = 0;
+    	jsonObject = new JSONObject();
     	readAndAddFilesToJSON(DATABASE_INPUT_PATH_FIRST);
     	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
 //    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_THIRD);
@@ -61,8 +62,7 @@ public class JSONDatabase
     
     private void readAndAddFilesToJSON(String inputPath){
     	rowList = new ArrayList<HashMap<String, String>>();
-		jsonObject = new JSONObject();
-		
+
     	try {
 			BufferedReader reader = new BufferedReader(new FileReader(inputPath));
 			
@@ -90,7 +90,6 @@ public class JSONDatabase
 					// Iterates though the list of projects and adds them to JSONObject
 					Iterator<HashMap<String, String>> itr = rowList.iterator();
 					while (itr.hasNext()) jsonObject.put(str, itr.next());
-					System.out.println("index is " + str);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				} 
@@ -108,6 +107,9 @@ public class JSONDatabase
 			System.err.println("Cannot read " + inputPath  + " file");
 			System.exit(1);
 		}
+    	// Increment index once more so that index is incremented
+    	// inbetween loading of different files
+    	index += 1;
     }
 
     /**
@@ -125,7 +127,20 @@ public class JSONDatabase
 			for (int i = 0; i < 17; i++){
 				// Puts type as key and its corresponding value for that columns
 				// 0..16 is the number of columns to be added
-				projectMapFirst.put(TYPES[i].toLowerCase(), lineAttributes[i].trim());
+				String attr = lineAttributes[i].trim();
+				if (attr.equalsIgnoreCase("very_low"))
+					attr = "0";
+				else if (attr.equalsIgnoreCase("low"))
+					attr = "1";
+				else if (attr.equalsIgnoreCase("nominal"))
+					attr = "2";
+				else if (attr.equalsIgnoreCase("high"))
+					attr = "3";
+				else if (attr.equalsIgnoreCase("very_high"))
+					attr = "4";
+				else if (attr.equalsIgnoreCase("extra_high"))
+					attr = "5";
+				projectMapFirst.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapFirst;
 		case PATH_SECOND:
@@ -133,7 +148,20 @@ public class JSONDatabase
 			for (int i = 0; i < 17; i++){
 				// Puts type as key and its corresponding value for that columns
 				// 0..16 is the number of columns to be added
-				projectMapSecond.put(TYPES[i].toLowerCase(), lineAttributes[i+OFFSET_DATABASE_SECOND].trim());
+				String attr = lineAttributes[i+OFFSET_DATABASE_SECOND].trim();
+				if (attr.equalsIgnoreCase("vl"))
+					attr = "0";
+				else if (attr.equalsIgnoreCase("l"))
+					attr = "1";
+				else if (attr.equalsIgnoreCase("n"))
+					attr = "2";
+				else if (attr.equalsIgnoreCase("h"))
+					attr = "3";
+				else if (attr.equalsIgnoreCase("vh"))
+					attr = "4";
+				else if (attr.equalsIgnoreCase("xh"))
+					attr = "5";
+				projectMapSecond.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapSecond;
 		case PATH_THIRD:
@@ -147,10 +175,13 @@ public class JSONDatabase
 		return null;
 	}
     
+	/**
+	 * Returns the number of projects added to the database
+	 * @return number of projects in database
+	 */
 	public Integer getTotalNumberOfProjects(){
 		return index;
 	}
-	
 	
     /**
      * Singleton getter method
@@ -193,11 +224,22 @@ public class JSONDatabase
 	
 	  /**
      * Returns the object associated with the key. 
-     * @return 		the entire JSONObject
+     * @param key	identifier key 
+     * @return 		value of object associated with key
      */
-	public JSONObject getJSONObject() {
-		return jsonObject;
-	}
+    public Object getJSONValueForKey(String key)
+    {
+    	if(jsonObject.has(key))
+    	{
+			try {
+				return jsonObject.get(key);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+    	}
+    	return null;
+    }
+
 
     /***********************************************************
      * Misc. methods
@@ -227,8 +269,15 @@ public class JSONDatabase
     	try {
 			return jsonObject.toString(3);
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return null;
     }
+
+
+
+	public JSONObject getJSONObject() {
+		return jsonObject;
+	}
 }
