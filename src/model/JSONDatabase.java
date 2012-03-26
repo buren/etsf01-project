@@ -27,16 +27,14 @@ public class JSONDatabase
 	private static final int PATH_THIRD = 3;
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
 	private static final String DELIMITER = ",";
-	private static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
-			"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-			"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+	private static final String[] TYPES = {"RELY","DATA","CPLX","TIME","STOR","VIRT","TURN","ACAP","AEXP","PCAP","VEXP","LEXP","MODP","TOOL","SCED","Size[kloc]","Effort[pm]","Project"};
+
 
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
 	private JSONObject jsonObject;
 	private Integer index;
-	private ArrayList<HashMap<String, String>> rowList;
 ;
 		
 	/*********************************************
@@ -53,14 +51,14 @@ public class JSONDatabase
     private JSONDatabase() {
     	index = 0;
     	readAndAddFilesToJSON(DATABASE_INPUT_PATH_FIRST);
-    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
+//    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
 //    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_THIRD);
     }
     
     
     
     private void readAndAddFilesToJSON(String inputPath){
-    	rowList = new ArrayList<HashMap<String, String>>();
+    	ArrayList<HashMap<String, String>> rowList = new ArrayList<HashMap<String, String>>();
 		jsonObject = new JSONObject();
 		
     	try {
@@ -147,11 +145,6 @@ public class JSONDatabase
 		return null;
 	}
     
-	public Integer getTotalNumberOfProjects(){
-		return index;
-	}
-	
-	
     /**
      * Singleton getter method
      * @return		a singleton instance of JSONDatase
@@ -193,11 +186,22 @@ public class JSONDatabase
 	
 	  /**
      * Returns the object associated with the key. 
-     * @return 		the entire JSONObject
+     * @param key	identifier key 
+     * @return 		value of object associated with key
      */
-	public JSONObject getJSONObject() {
-		return jsonObject;
-	}
+    public Object getJSONValueForKey(String key)
+    {
+    	if(jsonObject.has(key))
+    	{
+			try {
+				return jsonObject.get(key);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+    	}
+    	return null;
+    }
+
 
     /***********************************************************
      * Misc. methods
@@ -224,11 +228,6 @@ public class JSONDatabase
     * @return the jsonObject as a string
     */
     public String print() {
-    	try {
-			return jsonObject.toString(3);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-    	return null;
+    	return jsonObject.toString();
     }
 }

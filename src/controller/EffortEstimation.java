@@ -39,6 +39,7 @@ s	 */
 		this.database = database;
 		this.threshold = 0.5;
 	}
+	
 	/**
 	 * Calculates how similar a new project is compared to the finished projects in the database.
 	 * Returns a JSONObject containing the list of projects whose similarity > threshold.
@@ -46,17 +47,41 @@ s	 */
 	 */
 	public JSONObject calculateSimilarity(JSONObject futureProject) {
 		JSONObject listOfSimilarProjects = new JSONObject();
-		Iterator iter = database.keys();
+		Iterator iter = database.sortedKeys();
 		while (iter.hasNext()) {
+			double similarity = 0;
+			int nbrOfAttributes = 0;
 			String index = (String) iter.next();
 			try {
+				JSONObject project = (JSONObject) database.get(index);
+				Iterator projIter = project.sortedKeys();
+				while (projIter.hasNext()) {
+					String attribute = (String) projIter.next();
+					System.out.println(attribute);
+					int futureValue = Integer.parseInt((String) futureProject.get(attribute));
+					int oldValue = Integer.parseInt((String) project.get(attribute));
+					similarity += distance(futureValue, oldValue, 5, 0); 
+				}
 				listOfSimilarProjects.put(index, database.get(index));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			System.out.println(index);
 		}
 		return listOfSimilarProjects;
+	}
+	
+	/**
+	 * Calculates the Euclidean distance between two attributes given a possible max and min
+	 * of those attributes.
+	 * @param value1
+	 * @param value2
+	 * @param max
+	 * @param min
+	 * @return
+	 */
+	public double distance(double value1, double value2, double max, double min) {
+		return (Math.abs(value1 - value2) / (max - min))
+			 * (Math.abs(value1 - value2) / (max - min));
 	}
 	
 	/**
