@@ -20,18 +20,18 @@ public class TestJSONDatabase extends TestCase{
 	private static final String CPLX_COLUMN = "cplx";
 	private static final String RELY_COLUMN = "rely";
 	// First line values
-	private static final String FIRST_LINE_RELY_VALUE = "nominal";
-	private static final String FIRST_LINE_CPLX_VALUE = "very_high";
+	private static final String FIRST_LINE_RELY_VALUE = "2";
+	private static final String FIRST_LINE_CPLX_VALUE = "4";
 	private static final String FIRST_LINE_EFFORT_VALUE = "278";
 
 	// Last line values
-	private static final String LAST_LINE_RELY_VALUE = "nominal";
-	private static final String LAST_LINE_CPLX_VALUE = "high";
-	private static final String LAST_LINE_EFFORT_VALUE = "155";
+	private static final String LAST_LINE_RELY_VALUE = "3";
+	private static final String LAST_LINE_CPLX_VALUE = "4";
+	private static final String LAST_LINE_EFFORT_VALUE = "38";
 
 	// Index for first and last lines
 	private static final String FIRST_LINE_INDEX = "0";
-	private static final String LAST_LINE_INDEX = "59";
+	private static final String LAST_LINE_INDEX = "152";
 	
 
 	/*********************************************
