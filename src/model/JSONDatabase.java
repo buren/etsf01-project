@@ -21,7 +21,7 @@ public class JSONDatabase
 	 *********************************************/
 	private static final String DATABASE_INPUT_PATH_FIRST = "files/databaseINalt1.txt";
 	private static final String DATABASE_INPUT_PATH_SECOND = "files/databaseINalt2.txt";
-	private static final String DATABASE_INPUT_PATH_THIRD = "files/databaseINalt3.txt";
+//	private static final String DATABASE_INPUT_PATH_THIRD = "files/databaseINalt3.txt";
 	private static final int PATH_FIRST = 1;
 	private static final int PATH_SECOND = 2;
 	private static final int PATH_THIRD = 3;
@@ -37,7 +37,7 @@ public class JSONDatabase
 	 *********************************************/
 	private JSONObject jsonObject;
 	private Integer index;
-;
+	ArrayList<HashMap<String, String>> rowList;
 		
 	/*********************************************
 	 * Constructors
@@ -54,17 +54,15 @@ public class JSONDatabase
     	index = 0;
     	jsonObject = new JSONObject();
     	readAndAddFilesToJSON(DATABASE_INPUT_PATH_FIRST);
-//    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
+    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
 //    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_THIRD);
     }
     
     
     
     private void readAndAddFilesToJSON(String inputPath){
+    	rowList = new ArrayList<HashMap<String, String>>();
 
-    	ArrayList<HashMap<String, String>> rowList = new ArrayList<HashMap<String, String>>();
-		jsonObject = new JSONObject();
-		
     	try {
 			BufferedReader reader = new BufferedReader(new FileReader(inputPath));
 			
@@ -268,7 +266,13 @@ public class JSONDatabase
     * @return the jsonObject as a string
     */
     public String print() {
-    	return jsonObject.toString();
+    	try {
+			return jsonObject.toString(3);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
     }
 
 
