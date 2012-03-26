@@ -7,6 +7,10 @@ import org.json.JSONObject;
 public class EffortEstimation {
 
 	
+	/*********************************************
+	 * PRIVATE CONSTANTS
+	 *********************************************/
+	private double SIMILARITY_THRESHOLD = 0.78;
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -64,9 +68,12 @@ s	 */
 						nbrOfAttributes++;
 					}
 				}
-				double similarity = Math.sqrt(distanceSum/nbrOfAttributes);
-				System.out.println("Similarity between future project and project " + index + " is " + similarity);
-				listOfSimilarProjects.put(index, database.get(index));
+				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
+				if (similarity > SIMILARITY_THRESHOLD) {
+					project.put("similarity", similarity);
+					listOfSimilarProjects.put(index, project);
+					
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

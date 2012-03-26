@@ -58,12 +58,8 @@ public class TestEffortEstimation {
 		Iterator iter = similarList.sortedKeys();
 		while(iter.hasNext()) {
 			String index = (String) iter.next();
-			try {
-				JSONObject project = (JSONObject) similarList.get(index);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			JSONObject project = (JSONObject) similarList.get(index);
+			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
 		}
 	}
 	
