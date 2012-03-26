@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,6 +8,10 @@ import org.json.JSONObject;
 public class EffortEstimation {
 
 	
+	/*********************************************
+	 * PRIVATE CONSTANTS
+	 *********************************************/
+	private double SIMILARITY_THRESHOLD = 0.78;
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -49,7 +54,7 @@ s	 */
 		JSONObject listOfSimilarProjects = new JSONObject();
 		Iterator iter = database.sortedKeys();
 		while (iter.hasNext()) {
-			double similarity = 0;
+			double distanceSum = 0;
 			int nbrOfAttributes = 0;
 			String index = (String) iter.next();
 			try {
@@ -57,12 +62,19 @@ s	 */
 				Iterator projIter = project.sortedKeys();
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
-					System.out.println(attribute);
-					int futureValue = Integer.parseInt((String) futureProject.get(attribute));
-					int oldValue = Integer.parseInt((String) project.get(attribute));
-					similarity += distance(futureValue, oldValue, 5, 0); 
+					if (!attribute.equals("size[kloc]") && !attribute.equals("effort[pm]")) {
+						int futureValue = Integer.parseInt((String) futureProject.get(attribute));
+						int oldValue = Integer.parseInt((String) project.get(attribute));
+						distanceSum += distance(futureValue, oldValue, 5, 0);
+						nbrOfAttributes++;
+					}
 				}
-				listOfSimilarProjects.put(index, database.get(index));
+				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
+				if (similarity > SIMILARITY_THRESHOLD) {
+					project.put("similarity", similarity);
+					listOfSimilarProjects.put(index, project);
+					
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -109,5 +121,14 @@ s	 */
 		}
 		est /= listOfSimilarProjects.length();
 		return (int) Math.round(est);
+	}
+	
+	/**
+	 * Invoked by GUI. 
+	 * @param futureProject - the project to be estimated
+	 * @return the time estimation
+	 */
+	public int calculateEffortForProject(HashMap<String, String> futureProject){
+		return calculateEffortEstimation(new JSONObject(futureProject));
 	}
 }
