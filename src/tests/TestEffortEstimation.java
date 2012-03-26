@@ -98,7 +98,8 @@ public class TestEffortEstimation {
 				e.printStackTrace();
 			}
 		}
-		assertEquals((int) Math.round(50*0.1+100*0.2+150*0.3+200*0.4+250*0.5), estimator.calculateEffortEstimation(projectList));
+		int correctResult = (int) Math.round((50*0.1+100*0.2+150*0.3+200*0.4+250*0.5) / 5.0); 
+		assertEquals(correctResult, estimator.calculateEffortEstimation(projectList));
 	}
 	
 }
