@@ -2,7 +2,7 @@
 
 
 # Update from master repository
-$ git pull git@github.com:buren/etsf01-project
+$ git pull git@github.com:buren/etsf01-project.git
 
 # Add one file to next commit 
 $ git add PATH_TO_FILE
