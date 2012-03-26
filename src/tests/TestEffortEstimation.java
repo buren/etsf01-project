@@ -51,10 +51,6 @@ public class TestEffortEstimation {
 	@Test
 	public void testSimilarity() throws JSONException{
 		JSONObject db = database.getJSONObject();
-		Iterator it = db.keys();
-		while (it.hasNext()) {
-			System.out.println(it.next());
-		}
 		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
 		JSONObject futureProject = database.getProjectAsJSONObject("1");
 
@@ -62,18 +58,8 @@ public class TestEffortEstimation {
 		Iterator iter = similarList.sortedKeys();
 		while(iter.hasNext()) {
 			String index = (String) iter.next();
-			System.out.print(index + ". ");
-			try {
-				JSONObject project = (JSONObject) similarList.get(index);
-				Iterator projIter = project.sortedKeys();
-				while (projIter.hasNext()) {
-					System.out.print(project.get((String) projIter.next()) + ", ");
-				}
-				System.out.println();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			JSONObject project = (JSONObject) similarList.get(index);
+			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
 		}
 	}
 	
