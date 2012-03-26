@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,5 +91,14 @@ s	 */
 	 */
 	public int calculateEffortEstimation(JSONObject futureProject) {
 		return 0;
+	}
+	
+	/**
+	 * Invoked by GUI. 
+	 * @param futureProject - the project to be estimated
+	 * @return the time estimation
+	 */
+	public int calculateEffortForProject(HashMap<String, String> futureProject){
+		return calculateEffortEstimation(new JSONObject(futureProject));
 	}
 }
