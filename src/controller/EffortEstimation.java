@@ -49,7 +49,7 @@ s	 */
 		JSONObject listOfSimilarProjects = new JSONObject();
 		Iterator iter = database.sortedKeys();
 		while (iter.hasNext()) {
-			double similarity = 0;
+			double distanceSum = 0;
 			int nbrOfAttributes = 0;
 			String index = (String) iter.next();
 			try {
@@ -57,11 +57,15 @@ s	 */
 				Iterator projIter = project.sortedKeys();
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
-					System.out.println(attribute);
-					int futureValue = Integer.parseInt((String) futureProject.get(attribute));
-					int oldValue = Integer.parseInt((String) project.get(attribute));
-					similarity += distance(futureValue, oldValue, 5, 0); 
+					if (!attribute.equals("size[kloc]") && !attribute.equals("effort[pm]")) {
+						int futureValue = Integer.parseInt((String) futureProject.get(attribute));
+						int oldValue = Integer.parseInt((String) project.get(attribute));
+						distanceSum += distance(futureValue, oldValue, 5, 0);
+						nbrOfAttributes++;
+					}
 				}
+				double similarity = Math.sqrt(distanceSum/nbrOfAttributes);
+				System.out.println("Similarity between future project and project " + index + " is " + similarity);
 				listOfSimilarProjects.put(index, database.get(index));
 			} catch (JSONException e) {
 				e.printStackTrace();
