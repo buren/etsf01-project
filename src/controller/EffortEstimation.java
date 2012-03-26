@@ -11,7 +11,7 @@ public class EffortEstimation {
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.78;
+	private double SIMILARITY_THRESHOLD = 0.83;
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -62,13 +62,12 @@ s	 */
 				Iterator projIter = project.sortedKeys();
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
-					if (!attribute.equals("size[kloc]") && !attribute.equals("effort[pm]")) {
-						int futureValue = Integer.parseInt((String) futureProject.get(attribute));
-						int oldValue = Integer.parseInt((String) project.get(attribute));
-						distanceSum += distance(futureValue, oldValue, 5, 0);
+					double maxDistance = maximumDistance(attribute);
+					if (!attribute.equals("effort[pm]")) {
+						double futureValue = Double.parseDouble((String) futureProject.get(attribute));
+						double oldValue = Double.parseDouble((String) project.get(attribute));
+						distanceSum += distance(futureValue, oldValue, maxDistance);
 						nbrOfAttributes++;
-					} else if (attribute.equals("size[kloc]")) {
-						
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
@@ -84,18 +83,46 @@ s	 */
 		return listOfSimilarProjects;
 	}
 	
+	private double maximumDistance(String attribute) {
+		if (!attribute.equals("size[kloc]")) {
+			return 5;
+		}
+		double min = Integer.MAX_VALUE;
+		double max = 0;
+		Iterator iter = database.sortedKeys();
+		while (iter.hasNext()) {
+			String index = (String) iter.next();
+				JSONObject project;
+				try {
+					project = (JSONObject) database.get(index);
+					double value = Double.parseDouble((String) project.get(attribute));
+					if (value < min)
+						min = value;
+					if (value > max )
+						max = value;
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return max - min;
+	}
+	
 	/**
 	 * Calculates the Euclidean distance between two attributes given a possible max and min
 	 * of those attributes.
 	 * @param value1
 	 * @param value2
-	 * @param max
+	 * @param maxDistance
 	 * @param min
 	 * @return
 	 */
-	public double distance(double value1, double value2, double max, double min) {
-		return (Math.abs(value1 - value2) / (max - min))
-			 * (Math.abs(value1 - value2) / (max - min));
+	public double distance(double value1, double value2, double maxDistance) {
+		return (Math.abs(value1 - value2) / (maxDistance))
+			 * (Math.abs(value1 - value2) / (maxDistance));
 	}
 	
 	/**

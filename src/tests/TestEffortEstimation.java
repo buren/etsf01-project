@@ -48,8 +48,8 @@ public class TestEffortEstimation {
 	public void testSimilarity() throws JSONException{
 		JSONObject db = database.getJSONObject();
 		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
-		JSONObject futureProject = database.getProjectAsJSONObject("1");
-
+		JSONObject futureProject = database.getProjectAsJSONObject("100");
+		
 		JSONObject similarList = estimator.calculateSimilarity(futureProject);
 		Iterator iter = similarList.sortedKeys();
 		while(iter.hasNext()) {
@@ -62,7 +62,7 @@ public class TestEffortEstimation {
 	@Test
 	public void testDistance(){
 		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
-		assertTrue(estimator.distance(4, 4, 5, 0) == 0);
+		assertTrue(estimator.distance(4, 4, 5) == 0);
 	}
 	
 	@Test
