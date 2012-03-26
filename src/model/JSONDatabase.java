@@ -15,14 +15,27 @@ import org.json.*;
 public class JSONDatabase 
 {
 
+	private static final int OFFSET_DATABASE_SECOND = 6;
 	/*********************************************
 	 * private constants
 	 *********************************************/
-	private static final String DATABASE_INPUT_PATH = "files/databaseIN.txt";
+	private static final String DATABASE_INPUT_PATH_FIRST = "files/databaseINalt1.txt";
+	private static final String DATABASE_INPUT_PATH_SECOND = "files/databaseINalt2.txt";
+	private static final String DATABASE_INPUT_PATH_THIRD = "files/databaseINalt3.txt";
+	private static final int PATH_FIRST = 1;
+	private static final int PATH_SECOND = 2;
+	private static final int PATH_THIRD = 3;
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
-	private JSONObject jsonObject;
 	private static final String DELIMITER = ",";
-	
+	private static final String[] TYPES = {"RELY","DATA","CPLX","TIME","STOR","VIRT","TURN","ACAP","AEXP","PCAP","VEXP","LEXP","MODP","TOOL","SCED","Size[kloc]","Effort[pm]","Project"};
+
+
+	/*********************************************
+	 * CLASS OBJECTS
+	 *********************************************/
+	private JSONObject jsonObject;
+	private Integer index;
+;
 		
 	/*********************************************
 	 * Constructors
@@ -35,38 +48,47 @@ public class JSONDatabase
 	 *  converted to lower case.
 	 *  
 	 */
-    private JSONDatabase() 
-    {
-
-		ArrayList<HashMap<String, String>> rowList = new ArrayList<HashMap<String, String>>();
+    private JSONDatabase() {
+    	index = 0;
+    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_FIRST);
+//    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
+//    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_THIRD);
+    }
+    
+    
+    
+    private void readAndAddFilesToJSON(String inputPath){
+    	ArrayList<HashMap<String, String>> rowList = new ArrayList<HashMap<String, String>>();
 		jsonObject = new JSONObject();
+		
     	try {
-			BufferedReader reader = new BufferedReader(new FileReader(DATABASE_INPUT_PATH));
+			BufferedReader reader = new BufferedReader(new FileReader(inputPath));
 			
 			// HashMap<String, String> where key is the type and value is the column data
 			// Reads the first line that contains the types of every column
-			String[] types = reader.readLine().toLowerCase().split(DELIMITER);
-			String line = reader.readLine().toLowerCase();
-			Integer index = 0;
+			String line = reader.readLine().toLowerCase().trim();
 			while(line!=null)
 			{
+				while (line.equals("") || line.charAt(0)== '%' || line.charAt(0)== '@') line = reader.readLine().toLowerCase().trim();
 				String[] lineAttributes = line.toLowerCase().split(DELIMITER);
-				// Every element in rowMap is the corresponding data for one single line
-				HashMap<String, String> projectMap = new HashMap<String, String>(); 
-				for (int i = 0; i < 17; i++){
-					// Puts type as key and its corresponding value for that columns
-					// 0..16 is the number of columns to be added
-					projectMap.put(types[i], lineAttributes[i]);
-					rowList.add(projectMap);
+				HashMap<String, String> projectMap;
+				// Depending on which file is read, set the appropriate attributes to projectMap
+				if (inputPath.equals(DATABASE_INPUT_PATH_FIRST)){
+					projectMap = addAttributesFromFile(lineAttributes, PATH_FIRST);
+				}else if (inputPath.equals(DATABASE_INPUT_PATH_SECOND)){
+					projectMap = addAttributesFromFile(lineAttributes, PATH_SECOND);
+				}else{
+					projectMap = addAttributesFromFile(lineAttributes, PATH_THIRD);
 				}
+				rowList.add(projectMap);
 				// Adds the HashMap to ArrayList rowList
-				
 				String str = index.toString();
 				// Adds projectMap to JSON database
 				try {
 					// Iterates though the list of projects and adds them to JSONObject
 					Iterator<HashMap<String, String>> itr = rowList.iterator();
 					while (itr.hasNext()) jsonObject.put(str, itr.next());
+					System.out.println("index is " + str);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				} 
@@ -77,14 +99,51 @@ public class JSONDatabase
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.err.println("Cannot read " + DATABASE_INPUT_PATH  + " file");
+			System.err.println("Cannot read " + inputPath  + " file");
 			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("Cannot read " + DATABASE_INPUT_PATH  + " file");
+			System.err.println("Cannot read " + inputPath  + " file");
 			System.exit(1);
 		}
     }
+
+    /**
+     * Sets the correct values for each column depending on which type of file that is read
+     * @param types - list of the types that is used
+     * @param lineAttributes - string array with all the values for each column
+     * @param fileType - which type of input file is it?
+     * @return a hashmap containg all the data. 
+     */
+	private HashMap<String, String> addAttributesFromFile(String[] lineAttributes, int fileType) {
+		// Every element in rowMap is the corresponding data for one single line
+		switch (fileType) {
+		case PATH_FIRST:
+			HashMap<String, String> projectMapFirst = new HashMap<String, String>(); 
+			for (int i = 0; i < 17; i++){
+				// Puts type as key and its corresponding value for that columns
+				// 0..16 is the number of columns to be added
+				projectMapFirst.put(TYPES[i].toLowerCase(), lineAttributes[i].trim());
+			}
+			return projectMapFirst;
+		case PATH_SECOND:
+			HashMap<String, String> projectMapSecond = new HashMap<String, String>();
+			for (int i = 0; i < 17; i++){
+				// Puts type as key and its corresponding value for that columns
+				// 0..16 is the number of columns to be added
+				projectMapSecond.put(TYPES[i].toLowerCase(), lineAttributes[i+OFFSET_DATABASE_SECOND].trim());
+			}
+			return projectMapSecond;
+		case PATH_THIRD:
+			HashMap<String, String> projectMapThird = new HashMap<String, String>(); 
+			// TODO: Implement read for 'files/databaseInalt2.txt'
+			return projectMapThird;
+
+		default:
+			break;
+		}
+		return null;
+	}
     
     /**
      * Singleton getter method

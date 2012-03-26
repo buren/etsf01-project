@@ -51,9 +51,10 @@ public class TestJSONDatabase extends TestCase{
 	}
 	
 	@Test
-	public void testReadFromDatabaseINFile(){
+	public void testReadFromDatabaseINalt0File(){
 		try {
 			// Test first project
+			System.out.println(firstJSON);
 			assertEquals(FIRST_LINE_RELY_VALUE , firstJSON.get(RELY_COLUMN));
 			assertEquals(FIRST_LINE_CPLX_VALUE , firstJSON.get(CPLX_COLUMN));
 			assertEquals(FIRST_LINE_EFFORT_VALUE, firstJSON.get(EFFORTPM_COLUMN));

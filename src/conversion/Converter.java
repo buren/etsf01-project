@@ -17,9 +17,9 @@ public class Converter {
 	 * PRIVATE CONSTANTS
 	 *********************************************/
 
-	private static final int HOURS_IN_DAY = 24;
-	private static final int HOURS_IN_MONTH = 720;
-	private static final int HOURS_IN_YEAR = 262800;
+	private static final int HOURS_IN_DAY = 8;
+	private static final int HOURS_IN_MONTH = 152;
+	private static final int HOURS_IN_YEAR = 1824;
 	
 	/*********************************************
 	 * STATIC METHOD
