@@ -63,7 +63,7 @@ s	 */
 	 * Calculates the effort, in person-hours, for a project based on a list of similar projects.
 	 * @param listOfSimilarProjects
 	 */
-	private int calculateTimeEstimation(JSONObject listOfSimilarProjects){
+	public int calculateTimeEstimation(JSONObject listOfSimilarProjects){
 		double est = 0;
 		double effort = 0;
 		double similarity = 0;
