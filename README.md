@@ -4,11 +4,11 @@
 **FOLDERS**
 ************************************
 
-files: 
+_files:_ 
 	database files, input files and output files
-lib: 
+_lib:_ 
 	JSON jar file
-tools: 
+_tools:_ 
 	simple shell script for exporting the project to a jar-file
 
 

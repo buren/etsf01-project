@@ -16,6 +16,9 @@ $ git commit -m "Commit message"
 # Push changes to your forked repository
 $ git push origin master
 
+# Push directly to the master repository (buren/etsf01-project)
+$ git push git@github.com:buren/etsf01-project.git
+
 # To merge your commit to the master repository 
 # 1) Go to github.com and to your forked repository
 # 2) Click on "Pull request"
