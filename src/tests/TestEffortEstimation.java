@@ -1,16 +1,12 @@
 package tests;
 
 import static org.junit.Assert.*;
-
 import java.util.Iterator;
-
 import model.JSONDatabase;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-
 import controller.EffortEstimation;
 
 public class TestEffortEstimation {

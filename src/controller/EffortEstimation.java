@@ -66,6 +66,8 @@ s	 */
 						int oldValue = Integer.parseInt((String) project.get(attribute));
 						distanceSum += distance(futureValue, oldValue, 5, 0);
 						nbrOfAttributes++;
+					} else if (attribute.equals("size[kloc]")) {
+						
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
