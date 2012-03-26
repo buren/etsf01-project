@@ -195,7 +195,7 @@ public class JSONDatabase
      * Returns the object associated with the key. 
      * @return 		the entire JSONObject
      */
-	public Object getJSONObject() {
+	public JSONObject getJSONObject() {
 		return jsonObject;
 	}
 
