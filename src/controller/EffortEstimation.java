@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.Iterator;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EffortEstimation {
@@ -52,5 +55,24 @@ s	 */
 	 * @param listOfSimilarProjects
 	 */
 	private void calculateTimeEstimation(JSONObject listOfSimilarProjects){
+		double est = 0;
+		double effort = 0;
+		double similarity = 0;
+		Iterator it = listOfSimilarProjects.keys();
+		while (it.hasNext()) {
+			JSONObject proj = (JSONObject) it.next(); 
+			try {
+				effort = Double.parseDouble(proj.getString("effort[pm]"));
+				similarity = Double.parseDouble(proj.getString("Similarity"));
+			} catch (NumberFormatException e) {
+				System.err.println("EffortEstimation.calculateTimeEstimation: Bad effort value in database");
+				e.printStackTrace();
+			} catch (JSONException e) {
+				System.err.println("EffortEstimation.calculateTimeEstimation: Missing effort value in database");
+				e.printStackTrace();
+			}
+			est += similarity * effort;
+		}
+		est /= listOfSimilarProjects.length();
 	}
 }
