@@ -1,6 +1,9 @@
 package tests;
 
 import static org.junit.Assert.*;
+
+import java.util.Random;
+
 import model.JSONDatabase;
 
 import org.json.JSONException;
@@ -46,9 +49,29 @@ public class TestEffortEstimation {
 	}
 	
 	@Test
-	public void testSimilarity(){
+	public void testSimilarity() {
 		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
 		estimator.calculateSimilarity(database.getProjectAsJSONObject("1"));
+	}
+	
+	@Test
+	public void testEffortEstimation() {
+		Random rand = new Random();
+		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		JSONObject projectList = new JSONObject();
+		for (int i = 1; i <= 5; i++) {
+			try {
+				JSONObject proj = database.getProjectAsJSONObject("" + i);
+				proj.put("effort[pm]", ""+ (50*i));
+				double similarity = 0.1 * i;
+				proj.put("Similarity", "" + similarity);
+				projectList.put("" + i, proj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		assertEquals((int) Math.round(50*0.1+100*0.2+150*0.3+200*0.4+250*0.5), estimator.calculateSimilarity(projectList));
 	}
 	
 }
