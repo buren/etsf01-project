@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -101,7 +102,35 @@ s	 */
 	 * Calculates the effort, in person-hours, for a project based on a list of similar projects.
 	 * @param listOfSimilarProjects
 	 */
-	public int calculateEffortEstimation(JSONObject futureProject) {
-		return 0;
+	public int calculateEffortEstimation(JSONObject listOfSimilarProjects){
+		double est = 0;
+		double effort = 0;
+		double similarity = 0;
+		Iterator it = listOfSimilarProjects.keys();
+		while (it.hasNext()) { 
+			try {
+				JSONObject proj = database.getJSONObject((String) it.next());
+				effort = Double.parseDouble(proj.getString("effort[pm]"));
+				similarity = Double.parseDouble(proj.getString("similarity"));
+			} catch (NumberFormatException e) {
+				System.err.println("EffortEstimation.calculateTimeEstimation: Bad effort value in database");
+				e.printStackTrace();
+			} catch (JSONException e) {
+				System.err.println("EffortEstimation.calculateTimeEstimation: Missing effort value in database");
+				e.printStackTrace();
+			}
+			est += similarity * effort;
+		}
+		est /= listOfSimilarProjects.length();
+		return (int) Math.round(est);
+	}
+	
+	/**
+	 * Invoked by GUI. 
+	 * @param futureProject - the project to be estimated
+	 * @return the time estimation
+	 */
+	public int calculateEffortForProject(HashMap<String, String> futureProject){
+		return calculateEffortEstimation(new JSONObject(futureProject));
 	}
 }

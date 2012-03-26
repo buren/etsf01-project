@@ -65,4 +65,24 @@ public class TestEffortEstimation {
 		assertTrue(estimator.distance(4, 4, 5, 0) == 0);
 	}
 	
+	@Test
+	public void testEffortEstimation() {
+		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		JSONObject projectList = new JSONObject();
+		for (int i = 1; i <= 5; i++) {
+			try {
+				JSONObject proj = database.getProjectAsJSONObject("" + i);
+				proj.put("effort[pm]", ""+ (50*i));
+				double similarity = 0.1 * i;
+				proj.put("similarity", "" + similarity);
+				projectList.put("" + i, proj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		int correctResult = (int) Math.round((50*0.1+100*0.2+150*0.3+200*0.4+250*0.5) / 5.0); 
+		assertEquals(correctResult, estimator.calculateEffortEstimation(projectList));
+	}
+	
 }

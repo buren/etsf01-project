@@ -44,9 +44,9 @@ public class JSONDatabase
 	 *********************************************/
 	
 	/**
-	 *  Private constructor prevents instantiation from other classes
-	 *  Reads the database file specified in the DATABASE_INPUT_PATH above
-	 *  and instantiates a new JSONObject from its content all strings are
+	 *  Private constructor prevents instantiation from other classes.
+	 *  Reads the database files specified in the DATABASE_INPUT_PATHs above
+	 *  and instantiates a new JSONObject from the content. All strings are
 	 *  converted to lower case.
 	 *  
 	 */
