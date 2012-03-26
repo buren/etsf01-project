@@ -1,16 +1,16 @@
 package tests;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import model.JSONDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.JSONDatabase;
+import controller.EffortEstimation;
 
-public class TestJSONDatabase extends TestCase{
-
+public class TestEffortEstimation {
 
 	/*********************************************
 	 *  PRIVATE STATIC CONSTANTS
@@ -39,30 +39,16 @@ public class TestJSONDatabase extends TestCase{
 	 *********************************************/
 	
 	private JSONDatabase database;
-	private JSONObject firstJSON;
-	private JSONObject lastJSON;
-	
 	
 	@Before
 	public void setUp(){
 		 database = JSONDatabase.getInstance();
-		 firstJSON = database.getProjectAsJSONObject(FIRST_LINE_INDEX);
-		 lastJSON = database.getProjectAsJSONObject(LAST_LINE_INDEX);
 	}
 	
 	@Test
-	public void testReadFromDatabaseINalt0File(){
-		try {
-			// Test first project
-			assertEquals(FIRST_LINE_RELY_VALUE , firstJSON.get(RELY_COLUMN));
-			assertEquals(FIRST_LINE_CPLX_VALUE , firstJSON.get(CPLX_COLUMN));
-			assertEquals(FIRST_LINE_EFFORT_VALUE, firstJSON.get(EFFORTPM_COLUMN));
-			// Test last project
-			assertEquals(LAST_LINE_RELY_VALUE , lastJSON.get(RELY_COLUMN));
-			assertEquals(LAST_LINE_CPLX_VALUE , lastJSON.get(CPLX_COLUMN));
-			assertEquals(LAST_LINE_EFFORT_VALUE, lastJSON.get(EFFORTPM_COLUMN));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}		
+	public void testSimilarity(){
+		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		estimator.calculateSimilarity(database.getProjectAsJSONObject("1"));
 	}
+	
 }

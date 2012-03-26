@@ -53,7 +53,7 @@ public class JSONDatabase
     private JSONDatabase() {
     	index = 0;
     	readAndAddFilesToJSON(DATABASE_INPUT_PATH_FIRST);
-//    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
+    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_SECOND);
 //    	readAndAddFilesToJSON(DATABASE_INPUT_PATH_THIRD);
     }
     
@@ -193,22 +193,11 @@ public class JSONDatabase
 	
 	  /**
      * Returns the object associated with the key. 
-     * @param key	identifier key 
-     * @return 		value of object associated with key
+     * @return 		the entire JSONObject
      */
-    public Object getJSONValueForKey(String key)
-    {
-    	if(jsonObject.has(key))
-    	{
-			try {
-				return jsonObject.get(key);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-    	}
-    	return null;
-    }
-
+	public JSONObject getJSONObject() {
+		return jsonObject;
+	}
 
     /***********************************************************
      * Misc. methods
@@ -235,6 +224,11 @@ public class JSONDatabase
     * @return the jsonObject as a string
     */
     public String print() {
-    	return jsonObject.toString();
+    	try {
+			return jsonObject.toString(3);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    	return null;
     }
 }
