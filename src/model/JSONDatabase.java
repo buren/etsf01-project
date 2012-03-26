@@ -27,14 +27,16 @@ public class JSONDatabase
 	private static final int PATH_THIRD = 3;
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
 	private static final String DELIMITER = ",";
-	private static final String[] TYPES = {"RELY","DATA","CPLX","TIME","STOR","VIRT","TURN","ACAP","AEXP","PCAP","VEXP","LEXP","MODP","TOOL","SCED","Size[kloc]","Effort[pm]","Project"};
-
+	private static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
+			"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
+			"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
 
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
 	private JSONObject jsonObject;
 	private Integer index;
+	private ArrayList<HashMap<String, String>> rowList;
 ;
 		
 	/*********************************************
@@ -58,7 +60,7 @@ public class JSONDatabase
     
     
     private void readAndAddFilesToJSON(String inputPath){
-    	ArrayList<HashMap<String, String>> rowList = new ArrayList<HashMap<String, String>>();
+    	rowList = new ArrayList<HashMap<String, String>>();
 		jsonObject = new JSONObject();
 		
     	try {
@@ -145,6 +147,11 @@ public class JSONDatabase
 		return null;
 	}
     
+	public Integer getTotalNumberOfProjects(){
+		return index;
+	}
+	
+	
     /**
      * Singleton getter method
      * @return		a singleton instance of JSONDatase
