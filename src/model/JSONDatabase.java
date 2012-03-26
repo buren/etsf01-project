@@ -270,4 +270,10 @@ public class JSONDatabase
     public String print() {
     	return jsonObject.toString();
     }
+
+
+
+	public JSONObject getJSONObject() {
+		return jsonObject;
+	}
 }
