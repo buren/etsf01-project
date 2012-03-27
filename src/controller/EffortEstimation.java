@@ -49,6 +49,7 @@ s	 */
 	 * Calculates how similar a new project is compared to the finished projects in the database.
 	 * Returns a JSONObject containing the list of projects whose similarity > threshold.
 	 * @param futureProject
+	 * @return a list of projects that are similar above the threshold
 	 */
 	public JSONObject calculateSimilarity(JSONObject futureProject) {
 		JSONObject listOfSimilarProjects = new JSONObject();
@@ -89,7 +90,7 @@ s	 */
 	 * @param value2
 	 * @param max
 	 * @param min
-	 * @return
+	 * @return the euclidean distance 
 	 */
 	public double distance(double value1, double value2, double max, double min) {
 		return (Math.abs(value1 - value2) / (max - min))
@@ -126,7 +127,7 @@ s	 */
 	/**
 	 * Invoked by GUI. 
 	 * @param futureProject - the project to be estimated
-	 * @return the time estimation
+	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
 		return calculateEffortEstimation(new JSONObject(futureProject));
