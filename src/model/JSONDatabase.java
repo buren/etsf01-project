@@ -17,6 +17,13 @@ public class JSONDatabase
 
 	
 	/*********************************************
+	 * public constants
+	 *********************************************/
+	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
+		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+	
+	/*********************************************
 	 * private constants
 	 *********************************************/
 	private static final String DATABASE_INPUT_PATH_FIRST = "files/databaseINalt1.txt";
@@ -28,9 +35,7 @@ public class JSONDatabase
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
 	private static final String DELIMITER = ",";
 	private static final int OFFSET_DATABASE_SECOND = 7;
-	private static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
-			"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-			"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+	
 
 	/*********************************************
 	 * CLASS OBJECTS
