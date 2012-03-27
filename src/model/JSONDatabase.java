@@ -12,6 +12,8 @@ import java.util.Iterator;
 
 import org.json.*;
 
+import conversion.Converter;
+
 public class JSONDatabase 
 {
 
@@ -145,6 +147,8 @@ public class JSONDatabase
 					attr = "4";
 				else if (attr.equalsIgnoreCase("extra_high"))
 					attr = "5";
+				if (TYPES[i].equalsIgnoreCase("effort[pm]")) 
+					attr = String.valueOf(Converter.convertToHours(Converter.MONTHS, Double.parseDouble(attr)));
 				projectMapFirst.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapFirst;
@@ -166,6 +170,8 @@ public class JSONDatabase
 					attr = "4";
 				else if (attr.equalsIgnoreCase("xh"))
 					attr = "5";
+				if (TYPES[i].equalsIgnoreCase("effort[pm]")) 
+					attr = String.valueOf(Converter.convertToHours(Converter.MONTHS, Double.parseDouble(attr)));
 				projectMapSecond.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapSecond;

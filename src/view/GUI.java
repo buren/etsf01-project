@@ -14,7 +14,7 @@ public class GUI {
 		Frame frm = new Frame("Effort Estimation Calculator");
 		// Label lbl = new Label("Please fill this blank:");
 		// frm.add(lbl);
-		frm.setSize(800, 300);
+		frm.setSize(300, 300);
 		frm.setVisible(true);
 		frm.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -29,15 +29,16 @@ public class GUI {
 		ArrayList<Label> labelList = new ArrayList<Label>();
 		ArrayList<TextField> textFieldList = new ArrayList<TextField>();
 		Panel p = new Panel();
+		Panel p1 = new Panel();
+		p.setLayout(new GridLayout(4, 4));
 		for (String textLabel : JSONDatabase.TYPES){
 			p.add(new Label(textLabel));
 			p.add(new TextField(5));
 		}
-		Panel p1 = new Panel();
-		p.setLayout(new GridLayout(4, 4));
 		Button Submit = new Button("Submit");
 		p.add(Submit);
 		p1.add(p);
-		frm.add(p1, BorderLayout.NORTH);
+		frm.add(p1, BorderLayout.WEST);
+		frm.setSize(800, 300);
 	}
 }

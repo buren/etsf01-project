@@ -22,12 +22,12 @@ public class TestJSONDatabase extends TestCase{
 	// First line values
 	private static final String FIRST_LINE_RELY_VALUE = "2";
 	private static final String FIRST_LINE_CPLX_VALUE = "4";
-	private static final String FIRST_LINE_EFFORT_VALUE = "278";
+	private static final String FIRST_LINE_EFFORT_VALUE = "42256.0";
 
 	// Last line values
 	private static final String LAST_LINE_RELY_VALUE = "3";
 	private static final String LAST_LINE_CPLX_VALUE = "4";
-	private static final String LAST_LINE_EFFORT_VALUE = "38";
+	private static final String LAST_LINE_EFFORT_VALUE = "5776.0";
 
 	// Index for first and last lines
 	private static final String FIRST_LINE_INDEX = "0";

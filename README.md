@@ -23,7 +23,7 @@ _tools:_
 	_EffortEstimation:_ This is where the similarity function and time estimation is done. 
 
 **view:**
-	_GUI:_ The visual assets. 
+	_GUI:_ For now only creates a 4x4 view with correct labels and textfields.
 	
 **conversion:**
 	_Converter:_ Converts between units person-, -hours, -days, -months, -years
