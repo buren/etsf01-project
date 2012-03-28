@@ -49,9 +49,9 @@ public class TestEffortEstimation {
 	
 	@Test
 	public void testSimilarity() throws JSONException{
-		JSONObject db = database.getJSONObject();
-		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
-		JSONObject futureProject = database.getProjectAsJSONObject("1");
+		JSONObject db = database.getDatabaseAsJSONObject();
+		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
+		JSONObject futureProject = database.getOneProjectAsJSONObject("1");
 
 		JSONObject similarList = estimator.calculateSimilarity(futureProject);
 		Iterator iter = similarList.sortedKeys();
@@ -64,17 +64,17 @@ public class TestEffortEstimation {
 	
 	@Test
 	public void testDistance(){
-		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		assertTrue(estimator.distance(4, 4, 5, 0) == 0);
 	}
 	
 	@Test
 	public void testEffortEstimation() {
-		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		JSONObject projectList = new JSONObject();
 		for (int i = 1; i <= 5; i++) {
 			try {
-				JSONObject proj = database.getProjectAsJSONObject("" + i);
+				JSONObject proj = database.getOneProjectAsJSONObject("" + i);
 				proj.put("effort[pm]", ""+ (50*i));
 				double similarity = 0.1 * i;
 				proj.put("similarity", "" + similarity);

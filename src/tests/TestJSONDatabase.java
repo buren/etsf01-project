@@ -46,8 +46,8 @@ public class TestJSONDatabase extends TestCase{
 	@Before
 	public void setUp(){
 		 database = JSONDatabase.getInstance();
-		 firstJSON = database.getProjectAsJSONObject(FIRST_LINE_INDEX);
-		 lastJSON = database.getProjectAsJSONObject(LAST_LINE_INDEX);
+		 firstJSON = database.getOneProjectAsJSONObject(FIRST_LINE_INDEX);
+		 lastJSON = database.getOneProjectAsJSONObject(LAST_LINE_INDEX);
 	}
 	
 	@Test

@@ -221,7 +221,7 @@ public class JSONDatabase
 	 * @param key - key for the project
 	 * @return - the entire project as a {@link JSONObject}
 	 */
-	public JSONObject getProjectAsJSONObject(String key) {
+	public JSONObject getOneProjectAsJSONObject(String key) {
 		if (jsonObject.has(key)) {
 			try {
 				return jsonObject.getJSONObject(key);
@@ -288,7 +288,7 @@ public class JSONDatabase
 
 
 
-	public JSONObject getJSONObject() {
+	public JSONObject getDatabaseAsJSONObject() {
 		return jsonObject;
 	}
 }

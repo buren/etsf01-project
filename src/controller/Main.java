@@ -23,8 +23,8 @@ public class Main {
 	 * Public methods
 	 *********************************************/
 	public void run() {
-		JSONDatabase json = JSONDatabase.getInstance();
-//		System.out.println(json.print());
-//		GUI gui = new GUI();
+		JSONDatabase database = JSONDatabase.getInstance();
+//		System.out.println(database.print());
+		new GUI(database.getDatabaseAsJSONObject());
 	}
 }
