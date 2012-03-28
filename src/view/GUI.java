@@ -73,6 +73,7 @@ public class GUI implements ActionListener {
 
 		matrixPanel = new JTextField[ROWS][COLUMNS];
 		mainPanel2.add(submitButton);
+		mainPanel2.add(clearButton);
 		frame.add(mainPanel, BorderLayout.CENTER);
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
@@ -99,6 +100,7 @@ public class GUI implements ActionListener {
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
 				matrixPanel[row][col].setText(IDENTIFIER + EffortEstimation.TYPES[index++]);
+				
 			}
 		}
 	}
@@ -157,8 +159,7 @@ public class GUI implements ActionListener {
 		if(e.getSource().equals(submitButton)){
 			collectStartValuesFromGUI();
 		}
-		else if (e.getSource().equals(clearButton)){
+		else
 			clearGUI();
-		}
 	}	
 }
