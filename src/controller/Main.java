@@ -1,10 +1,6 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import view.GUI;
 
 import model.JSONDatabase;
 
@@ -27,7 +23,8 @@ public class Main {
 	 * Public methods
 	 *********************************************/
 	public void run() {
-		JSONDatabase json = JSONDatabase.getInstance();
-		System.out.println(json.print());
+		JSONDatabase database = JSONDatabase.getInstance();
+//		System.out.println(database.print());
+		new GUI(database.getDatabaseAsJSONObject());
 	}
 }

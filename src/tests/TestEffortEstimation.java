@@ -60,21 +60,6 @@ public class TestEffortEstimation {
 	}
 	
 	@Test
-	public void testPredictEffort() throws JSONException{
-		JSONObject db = database.getJSONObject();
-		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
-		JSONObject futureProject = database.getProjectAsJSONObject("100");
-		db.remove("100");
-		JSONObject similarList = estimator.calculateSimilarity(futureProject);
-		Iterator iter = similarList.sortedKeys();
-		while(iter.hasNext()) {
-			String index = (String) iter.next();
-			JSONObject project = (JSONObject) similarList.get(index);
-			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
-		}
-	}
-	
-	@Test
 	public void testDistance(){
 		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
 		assertTrue(estimator.distance(4, 4, 5) == 0);
@@ -98,6 +83,13 @@ public class TestEffortEstimation {
 		}
 		int correctResult = (int) Math.round((50*0.1+100*0.2+150*0.3+200*0.4+250*0.5) / 5.0); 
 		assertEquals(correctResult, estimator.calculateEffortEstimation(projectList));
+	}
+	
+	@Test
+	public void testPredictEffort() throws JSONException{
+		JSONObject db = database.getJSONObject();
+		EffortEstimation estimator = new EffortEstimation(database.getJSONObject());
+		JSONObject futureProject = database.getProjectAsJSONObject("100");
 	}
 	
 }

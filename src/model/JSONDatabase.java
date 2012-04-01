@@ -12,9 +12,18 @@ import java.util.Iterator;
 
 import org.json.*;
 
+import conversion.Converter;
+
 public class JSONDatabase 
 {
 
+	
+	/*********************************************
+	 * public constants
+	 *********************************************/
+	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
+		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
 	
 	/*********************************************
 	 * private constants
@@ -28,9 +37,7 @@ public class JSONDatabase
 	private static final String DATABASE_OUTPUT_PATH = "files/databaseOUT.txt";
 	private static final String DELIMITER = ",";
 	private static final int OFFSET_DATABASE_SECOND = 7;
-	private static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
-			"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-			"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+	
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -140,6 +147,8 @@ public class JSONDatabase
 					attr = "4";
 				else if (attr.equalsIgnoreCase("extra_high"))
 					attr = "5";
+				if (TYPES[i].equalsIgnoreCase("effort[pm]")) 
+					attr = String.valueOf(Converter.convertToHours(Converter.MONTHS, Double.parseDouble(attr)));
 				projectMapFirst.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapFirst;
@@ -161,6 +170,8 @@ public class JSONDatabase
 					attr = "4";
 				else if (attr.equalsIgnoreCase("xh"))
 					attr = "5";
+				if (TYPES[i].equalsIgnoreCase("effort[pm]")) 
+					attr = String.valueOf(Converter.convertToHours(Converter.MONTHS, Double.parseDouble(attr)));
 				projectMapSecond.put(TYPES[i].toLowerCase(), attr);
 			}
 			return projectMapSecond;
@@ -210,7 +221,7 @@ public class JSONDatabase
 	 * @param key - key for the project
 	 * @return - the entire project as a {@link JSONObject}
 	 */
-	public JSONObject getProjectAsJSONObject(String key) {
+	public JSONObject getOneProjectAsJSONObject(String key) {
 		if (jsonObject.has(key)) {
 			try {
 				return jsonObject.getJSONObject(key);
@@ -277,7 +288,7 @@ public class JSONDatabase
 
 
 
-	public JSONObject getJSONObject() {
+	public JSONObject getDatabaseAsJSONObject() {
 		return jsonObject;
 	}
 }

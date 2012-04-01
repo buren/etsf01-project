@@ -61,7 +61,7 @@ public class Converter {
 	 * @return a double value in the unit Person-days.
 	 */
 	public static double convertToDays(int currentUnit, double value){
-		return convertToHours(currentUnit, value);
+		return convertToHours(currentUnit, value)/HOURS_IN_DAY;
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class Converter {
 	 * @return a double value in the unit Person-months.
 	 */
 	public static double convertToMonths(int currentUnit, double value){
-		return convertToHours(currentUnit, value);
+		return convertToHours(currentUnit, value)/HOURS_IN_MONTH;
 	}
 	
 	/**
@@ -81,6 +81,6 @@ public class Converter {
 	 * @return a double value in the unit Person-months.
 	 */
 	public static double convertToYears(int currentUnit, double value){
-		return convertToHours(currentUnit, value);
+		return convertToHours(currentUnit, value)/HOURS_IN_YEAR;
 	}
 }

@@ -1,17 +1,32 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import conversion.Converter;
 
 public class EffortEstimation {
+
+	/*********************************************
+	 * PUBLIC CONSTANTS
+	 *********************************************/
+	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
+		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
 
 	
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
 	private double SIMILARITY_THRESHOLD = 0.83;
+	private static final String FILEPATH_FOR_FUTURE_PROJECT = "files/futureproject.json";
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -49,6 +64,7 @@ s	 */
 	 * Calculates how similar a new project is compared to the finished projects in the database.
 	 * Returns a JSONObject containing the list of projects whose similarity > threshold.
 	 * @param futureProject
+	 * @return a list of projects that are similar above the threshold
 	 */
 	public JSONObject calculateSimilarity(JSONObject futureProject) {
 		JSONObject listOfSimilarProjects = new JSONObject();
@@ -118,7 +134,7 @@ s	 */
 	 * @param value2
 	 * @param maxDistance
 	 * @param min
-	 * @return
+	 * @return the euclidean distance 
 	 */
 	public double distance(double value1, double value2, double maxDistance) {
 		return (Math.abs(value1 - value2) / (maxDistance))
@@ -155,9 +171,12 @@ s	 */
 	/**
 	 * Invoked by GUI. 
 	 * @param futureProject - the project to be estimated
-	 * @return the time estimation
+	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
-		return calculateEffortEstimation(new JSONObject(futureProject));
+		try {
+			System.out.println(new JSONObject(futureProject).toString(2));
+		} catch (JSONException e) {e.printStackTrace();}
+		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, calculateEffortEstimation(calculateSimilarity(new JSONObject(futureProject)))));
 	}
 }
