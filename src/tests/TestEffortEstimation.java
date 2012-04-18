@@ -41,16 +41,17 @@ public class TestEffortEstimation {
 	 *********************************************/
 	
 	private JSONDatabase database;
+	EffortEstimation estimator;
 	
 	@Before
 	public void setUp(){
 		 database = JSONDatabase.getInstance();
+		 estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 	}
 	
 	@Test
 	public void testSimilarity() throws JSONException{
 		JSONObject db = database.getDatabaseAsJSONObject();
-		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		JSONObject futureProject = database.getOneProjectAsJSONObject("1");
 
 		JSONObject similarList = estimator.calculateSimilarity(futureProject);
@@ -64,13 +65,11 @@ public class TestEffortEstimation {
 	
 	@Test
 	public void testDistance(){
-		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		assertTrue(estimator.distance(4, 4, 5, 0) == 0);
 	}
 	
 	@Test
 	public void testEffortEstimation() {
-		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		JSONObject projectList = new JSONObject();
 		for (int i = 1; i <= 5; i++) {
 			try {
