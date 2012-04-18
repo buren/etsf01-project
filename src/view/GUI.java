@@ -28,7 +28,7 @@ public class GUI implements ActionListener {
 	 *********************************************/
 	private static final String NO_INPUT = "0";
 	private static final int ROWS = 4;
-	private static final int COLUMNS = 4;
+	private static final int COLUMNS = 5;
 	private static final char IDENTIFIER = '#';
 	private static final String LINE_ENDING = "\r\n";
 	private static final String FUTURE_PROJECT_PATH = "files/futureproject.json";
