@@ -19,7 +19,7 @@ public class EffortEstimation {
 	 *********************************************/
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", };
 
 	
 	/*********************************************

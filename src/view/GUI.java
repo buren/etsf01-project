@@ -66,7 +66,7 @@ public class GUI implements ActionListener {
 		submitButton = new JButton("Submit");
 		clearButton = new JButton("Clear");
 		resultField = new JTextField();
-		resultField.setText("Result");
+		resultField.setText("Result in [pm]");
 		mainPanel2.add(resultField, BorderLayout.SOUTH);
 		mainPanel2.add(submitButton, BorderLayout.SOUTH);
 		mainPanel2.add(clearButton, BorderLayout.SOUTH);
