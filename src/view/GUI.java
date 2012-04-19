@@ -76,11 +76,12 @@ public class GUI implements ActionListener {
 		// Program will exit when pressing the "x" in the top right corner
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Default size of the window
-		frame.setSize(300, 300);
+		frame.setSize(600, 600);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
 		clearButton = new JButton(CLEAR_BUTTON_LABEL);
+		// Adds actionsListeners for both submit- and clear buttons
 		submitButton.addActionListener(this);
 		clearButton.addActionListener(this);
 		
@@ -97,7 +98,7 @@ public class GUI implements ActionListener {
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 		
-		// Creates the 4x4 view for the GUI 
+		// Creates the 4x5 view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
@@ -135,10 +136,20 @@ public class GUI implements ActionListener {
 			for (int col = 0; col < COLUMNS; col++) {
 				if(matrixPanel[row][col].getText().contains(IDENTIFIER))
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
-				else
+				else{
+					// Verify that each field is a number.
+					try{
+						Integer.parseInt((matrixPanel[row][col].getText()));	
+					}catch(NumberFormatException e){ 
+						matrixPanel[row][col].setBackground(Color.RED);
+						matrixPanel[row][col].setText(IDENTIFIER + "Must be a number!");
+						break;
+					}
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
+				}
 			}
 		}
+		System.out.println("gat fasdas");
 		project.put("effort[pm]", NO_INPUT);
 		writeToFile(project);
 		resultField.setText(String.valueOf(calculate(project)));
