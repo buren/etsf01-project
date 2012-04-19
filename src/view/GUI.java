@@ -23,15 +23,22 @@ public class GUI implements ActionListener {
 	
 	
 	
+	
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
+	// Contstants and indentifiers
 	private static final String NO_INPUT = "0";
 	private static final int ROWS = 4;
 	private static final int COLUMNS = 5;
-	private static final char IDENTIFIER = '#';
+	private static final String IDENTIFIER = "#";
 	private static final String LINE_ENDING = "\r\n";
 	private static final String FUTURE_PROJECT_PATH = "files/futureproject.json";
+	// Constants for the GUI
+	private static final String WINDOW_TITLE = "Effort Estimation Calculator";
+	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
+	private static final String CLEAR_BUTTON_LABEL = "Clear";
+	private static final String SUBMIT_BUTTON_LABEL = "Submit";
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -45,15 +52,24 @@ public class GUI implements ActionListener {
 	private EffortEstimation effortEstimation;
 
 	/**
-	 * Creates the GUI with default input values.
+	 * Creates the GUI with default input values 
+	 * and inits {@link EffortEstimation} with the database.
 	 */
 	public GUI(JSONObject database) {
-		
 		effortEstimation = new EffortEstimation(database);
+
+		initGUI();
+	}
+
+	/** 
+	 * Inits the GUI. 
+	 * Creates the entire view. 
+	 */
+	private void initGUI() {
 		
 		JPanel mainPanel2  = new JPanel();
 		// Label for the windows
-		JFrame frame = new JFrame("Effort Estimation Calculator");
+		JFrame frame = new JFrame(WINDOW_TITLE);
 		mainPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
 		
 		
@@ -63,10 +79,13 @@ public class GUI implements ActionListener {
 		frame.setSize(300, 300);
 		
 		// Inits buttons and result field and adds them to the layout
-		submitButton = new JButton("Submit");
-		clearButton = new JButton("Clear");
+		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
+		clearButton = new JButton(CLEAR_BUTTON_LABEL);
+		submitButton.addActionListener(this);
+		clearButton.addActionListener(this);
+		
 		resultField = new JTextField();
-		resultField.setText("Result in [pm]");
+		resultField.setText(RESULT_BUTTON_LABEL);
 		mainPanel2.add(resultField, BorderLayout.SOUTH);
 		mainPanel2.add(submitButton, BorderLayout.SOUTH);
 		mainPanel2.add(clearButton, BorderLayout.SOUTH);
@@ -93,9 +112,10 @@ public class GUI implements ActionListener {
 	}
 	
 	/**
-	 * Clear the GUI from all inputs, to default values
+	 * Clears the GUI from all inputs, to default values
 	 */
 	public void clearGUI() {
+		// TODO: actionPerformed doesn't recognize that the user has pressed the Clear button. 
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
@@ -113,7 +133,7 @@ public class GUI implements ActionListener {
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				if(matrixPanel[row][col].getText().charAt(0) == IDENTIFIER)
+				if(matrixPanel[row][col].getText().contains(IDENTIFIER))
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
 				else
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
@@ -156,9 +176,8 @@ public class GUI implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(submitButton)){
+		if(e.getSource().equals(submitButton))
 			collectStartValuesFromGUI();
-		}
 		else
 			clearGUI();
 	}	
