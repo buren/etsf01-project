@@ -146,10 +146,6 @@ s	 */
 	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
-		try {
-			System.out.println(new JSONObject(futureProject).toString(2));
-		} catch (JSONException e) {e.printStackTrace();}
-		
 		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, calculateEffortEstimation(calculateSimilarity(new JSONObject(futureProject)))));
 	}
 }
