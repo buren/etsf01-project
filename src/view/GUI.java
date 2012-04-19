@@ -152,10 +152,12 @@ public class GUI implements ActionListener {
 				}
 			}
 		}
-		project.put("effort[pm]", NO_INPUT);
+		String result = String.valueOf(calculate(project));
+		resultField.setText(result);
+		project.put("effort[pm]", result);
 		writeToFile(project);
-		resultField.setText(String.valueOf(calculate(project)));
 	}
+	
 	/**
 	 * Calculates and returns the value of the estimation.
 	 * @param project the future project to estimate
