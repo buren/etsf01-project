@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.omg.CORBA.NO_IMPLEMENT;
 
 import controller.EffortEstimation;
 
@@ -49,16 +47,19 @@ public class GUI implements ActionListener {
 	private JTextField resultField;
 	private EffortEstimation effortEstimation;
 
+
+	/*********************************************
+	 * CONSTRUCTOR
+	 *********************************************/
+
 	/**
 	 * Creates the GUI with default input values 
 	 * and inits {@link EffortEstimation} with the database.
 	 */
 	public GUI(JSONObject database) {
 		effortEstimation = new EffortEstimation(database);
-
 		initGUI();
 	}
-
 	/** 
 	 * Inits the GUI. 
 	 * Creates the entire view. 
@@ -69,7 +70,6 @@ public class GUI implements ActionListener {
 		// Label for the windows
 		JFrame frame = new JFrame(WINDOW_TITLE);
 		mainPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
-		
 		
 		
 		// Program will exit when pressing the "x" in the top right corner
@@ -96,17 +96,14 @@ public class GUI implements ActionListener {
 		frame.add(mainPanel, BorderLayout.CENTER);
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
-		
-		
 
-		Font font = new Font("Verdana", Font.BOLD, 18);
 		// Creates the 4x5 view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
 				matrixBoxValue = new JTextField();
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
-				matrixBoxValue.setFont(font);
+				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 18));
 				matrixBoxValue.setText( IDENTIFIER + EffortEstimation.TYPES[index++]);
 				matrixPanel[r][c] = matrixBoxValue;
 				mainPanel.add(matrixBoxValue);
@@ -115,10 +112,62 @@ public class GUI implements ActionListener {
 		frame.setVisible(true);
 	}
 	
+	
+	/*********************************************
+	 * GUI METHODS
+	 *********************************************/
+
+
+	/**
+	 * Collects the values that are inputed in GUI.
+	 * If a field still has its default value, NO_INPUT is added to the the field.
+	 * Calculates and returns the value of the estimation to the GUI
+	 * and writes the entire input and effort estimation to files/futureproject.json
+	 */
+	public void collectStartValuesAndCalculateEffort()  {
+		HashMap<String, String> project = new HashMap<String, String>();
+		int index = 0;
+		for (int row = 0; row < ROWS; row++) {
+			for (int col = 0; col < COLUMNS; col++) {
+				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
+					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
+				}else
+					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
+			}
+		}
+		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
+		resultField.setText(result);
+		project.put("effort[pm]", result);
+		writeToFile(project);
+	}
+	
+	
+	private boolean validateStartValuesFromGUI(){
+		boolean allFieldsValid = true;
+		for (int row = 0; row < ROWS; row++) {
+			for (int col = 0; col < COLUMNS; col++) {
+				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
+					matrixPanel[row][col].setBackground(Color.DARK_GRAY);
+				}else{
+					try{
+						Integer.parseInt((matrixPanel[row][col].getText()));	
+					}catch(NumberFormatException e){ 
+						matrixPanel[row][col].setBackground(Color.RED);
+						matrixPanel[row][col].setText("Insert number!");
+						allFieldsValid = false;
+					}
+				}
+			}
+		}
+		return allFieldsValid;
+	}
+	
+	
+
 	/**
 	 * Clears the GUI from all inputs, to default values
 	 */
-	public void clearGUI() {
+	private void clearGUI() {
 		// TODO: actionPerformed doesn't recognize that the user has pressed the Clear button. 
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
@@ -128,47 +177,29 @@ public class GUI implements ActionListener {
 			}
 		}
 	}
-	/**
-	 * Collects the values that are inputed in GUI.
-	 * If a field still has its default value, NO_INPUT is added to the the field.
-	 */
-	public void collectStartValuesFromGUI()  {
-		HashMap<String, String> project = new HashMap<String, String>();
-		int index = 0;
-		for (int row = 0; row < ROWS; row++) {
-			for (int col = 0; col < COLUMNS; col++) {
-				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
-					matrixPanel[row][col].setBackground(Color.DARK_GRAY);
-					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
-				}
-				else{
-					// Verify that each field is a number.
-					try{
-						Integer.parseInt((matrixPanel[row][col].getText()));	
-					}catch(NumberFormatException e){ 
-						matrixPanel[row][col].setBackground(Color.RED);
-						matrixPanel[row][col].setText(IDENTIFIER + "Insert number!");
-						break;
-					}
-					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
-				}
-			}
-		}
-		String result = String.valueOf(calculate(project));
-		resultField.setText(result);
-		project.put("effort[pm]", result);
-		writeToFile(project);
-	}
+	
 	
 	/**
-	 * Calculates and returns the value of the estimation.
-	 * @param project the future project to estimate
-	 * @return the value of the estimation as an int.
-	 * 
+	 * Actions performed by buttons.
 	 */
-	private int calculate(HashMap<String, String> project){
-		return effortEstimation.calculateEffortForProject(project);
-	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(submitButton)){
+			if (validateStartValuesFromGUI()){
+				collectStartValuesAndCalculateEffort();
+			}
+		}		
+		else
+			clearGUI();
+	}	
+	
+	
+	
+	
+	/*********************************************
+	 * PRIVATE HELPER METHODS
+	 *********************************************/
+	
 	
 	/**
 	 * Writes the project to json formatted file (files/futureproject.json).
@@ -188,14 +219,5 @@ public class GUI implements ActionListener {
 	}
 	
 	
-	/**
-	 * Actions performed by buttons.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(submitButton))
-			collectStartValuesFromGUI();
-		else
-			clearGUI();
-	}	
+	
 }
