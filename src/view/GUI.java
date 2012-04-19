@@ -150,7 +150,14 @@ public class GUI implements ActionListener {
 					matrixPanel[row][col].setBackground(Color.DARK_GRAY);
 				}else{
 					try{
-						Integer.parseInt((matrixPanel[row][col].getText()));	
+						int value = Integer.parseInt((matrixPanel[row][col].getText()));
+						if (value < 0 || value > 6){
+							matrixPanel[row][col].setBackground(Color.RED);
+							matrixPanel[row][col].setText("Allowed: 1-6");
+							allFieldsValid = false;
+						}else{
+							matrixPanel[row][col].setBackground(Color.LIGHT_GRAY);
+						}
 					}catch(NumberFormatException e){ 
 						matrixPanel[row][col].setBackground(Color.RED);
 						matrixPanel[row][col].setText("Insert number!");
