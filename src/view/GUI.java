@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
@@ -19,9 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class GUI implements ActionListener {
-	
-	
-	
 	
 	
 	/*********************************************
@@ -73,10 +71,11 @@ public class GUI implements ActionListener {
 		mainPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
 		
 		
+		
 		// Program will exit when pressing the "x" in the top right corner
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Default size of the window
-		frame.setSize(600, 600);
+		frame.setSize(850, 600);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -98,12 +97,16 @@ public class GUI implements ActionListener {
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 		
+		
+
+		Font font = new Font("Verdana", Font.BOLD, 18);
 		// Creates the 4x5 view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
 				matrixBoxValue = new JTextField();
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
+				matrixBoxValue.setFont(font);
 				matrixBoxValue.setText( IDENTIFIER + EffortEstimation.TYPES[index++]);
 				matrixPanel[r][c] = matrixBoxValue;
 				mainPanel.add(matrixBoxValue);
@@ -142,14 +145,13 @@ public class GUI implements ActionListener {
 						Integer.parseInt((matrixPanel[row][col].getText()));	
 					}catch(NumberFormatException e){ 
 						matrixPanel[row][col].setBackground(Color.RED);
-						matrixPanel[row][col].setText(IDENTIFIER + "Must be a number!");
+						matrixPanel[row][col].setText(IDENTIFIER + "Insert number!");
 						break;
 					}
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
 				}
 			}
 		}
-		System.out.println("gat fasdas");
 		project.put("effort[pm]", NO_INPUT);
 		writeToFile(project);
 		resultField.setText(String.valueOf(calculate(project)));
