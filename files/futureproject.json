@@ -1,6 +1,7 @@
 {
   "acap": "0",
   "aexp": "0",
+<<<<<<< HEAD
   "cplx": "0",
   "data": "0",
   "effort[pm]": "0",
@@ -10,6 +11,17 @@
   "rely": "0",
   "sced": "0",
   "size[kloc]": "0",
+=======
+  "cplx": "3",
+  "data": "5",
+  "effort[pm]": "240",
+  "lexp": "0",
+  "modp": "3",
+  "pcap": "0",
+  "rely": "3",
+  "sced": "0",
+  "size[kloc]": "3",
+>>>>>>> 77d47812001d0aebc82542793ca0ce04f52c0074
   "stor": "0",
   "temp1": "0",
   "temp2": "0",

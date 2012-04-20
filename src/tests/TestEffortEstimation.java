@@ -1,7 +1,11 @@
 package tests;
 
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.Future;
+
 import model.JSONDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +87,24 @@ public class TestEffortEstimation {
 	}
 	
 	@Test
+	public void testSimilarity2() throws JSONException{
+		HashMap<String, String> futureProject = new HashMap<String, String>();
+		futureProject.put(EffortEstimation.TYPES[0].toLowerCase(), "4");
+		futureProject.put(EffortEstimation.TYPES[1].toLowerCase(), "4");
+		for (int i = 2; i < EffortEstimation.TYPES.length; i++) {
+			futureProject.put(EffortEstimation.TYPES[i].toLowerCase(), "0");
+		}
+		JSONObject similarList = estimator.calculateSimilarity(new JSONObject(futureProject));
+		System.out.println("Number of similar projects: " + similarList.length());
+		Iterator iter = similarList.sortedKeys();
+		while(iter.hasNext()) {
+			String index = (String) iter.next();
+			JSONObject project = (JSONObject) similarList.get(index);
+			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
+		}
+	}
+	
+	@Test
 	public void testDistance(){
 		assertTrue(estimator.distance(4, 4, 5) == 0);
 	}
@@ -112,7 +134,7 @@ public class TestEffortEstimation {
 		for (int i = 0; i < 50; i++) {
 			JSONObject futureProject = database.getOneProjectAsJSONObject("" + i);
 			int effort = estimator.calculateEffortEstimation(futureProject);
-			System.out.println("Effort for project " + i + " = " + Converter.convertToMonths(Converter.HOURS, effort));	
+//			System.out.println("Effort for project " + i + " = " + Converter.convertToMonths(Converter.HOURS, effort));	
 		}
 	}
 				

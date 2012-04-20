@@ -118,12 +118,9 @@ public class GUI implements ActionListener {
 		frame.setVisible(true);
 	}
 	
-	
 	/*********************************************
 	 * GUI METHODS
 	 *********************************************/
-
-
 	/**
 	 * Collects the values that are inputed in GUI.
 	 * If a field still has its default value, NO_INPUT is added to the the field.
