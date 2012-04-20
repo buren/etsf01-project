@@ -38,10 +38,12 @@ public class TestEffortEstimation {
 	 *********************************************/
 	
 	private JSONDatabase database;
+	EffortEstimation estimator;
 	
 	@Before
 	public void setUp(){
 		 database = JSONDatabase.getInstance();
+		 estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 	}
 	
 //	@Test
@@ -60,8 +62,27 @@ public class TestEffortEstimation {
 //	}
 	
 	@Test
-	public void testDistance(){
+	public void testDistance1(){
 		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
+		assertTrue(estimator.distance(4, 4, 5) == 0);
+	}
+	
+	@Test
+	public void testSimilarity() throws JSONException{
+		JSONObject db = database.getDatabaseAsJSONObject();
+		JSONObject futureProject = database.getOneProjectAsJSONObject("1");
+
+		JSONObject similarList = estimator.calculateSimilarity(futureProject);
+		Iterator iter = similarList.sortedKeys();
+		while(iter.hasNext()) {
+			String index = (String) iter.next();
+			JSONObject project = (JSONObject) similarList.get(index);
+			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
+		}
+	}
+	
+	@Test
+	public void testDistance(){
 		assertTrue(estimator.distance(4, 4, 5) == 0);
 	}
 	
@@ -104,7 +125,23 @@ public class TestEffortEstimation {
 				db.put("" + i, futureProject);
 			}
 		}
-		System.out.println((double) closeEnough/(db.length()));
 	}
+				
+//	public void testEffortEstimation() {
+//		JSONObject projectList = new JSONObject();
+//		for (int i = 1; i <= 5; i++) {
+//			try {
+//				JSONObject proj = database.getOneProjectAsJSONObject("" + i);
+//				proj.put("effort[pm]", ""+ (50*i));
+//				double similarity = 0.1 * i;
+//				proj.put("similarity", "" + similarity);
+//				projectList.put("" + i, proj);
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		System.out.println((double) closeEnough/(db.length()));
+//	}
 	
 }

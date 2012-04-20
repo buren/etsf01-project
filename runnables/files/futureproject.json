@@ -1,0 +1,19 @@
+{
+  "acap": "3",
+  "aexp": "2",
+  "cplx": "1",
+  "data": "4",
+  "effort[pm]": "0",
+  "lexp": "3",
+  "modp": "2",
+  "pcap": "1",
+  "rely": "3",
+  "sced": "2",
+  "size[kloc]": "15.6",
+  "stor": "2",
+  "time": "2",
+  "tool": "1",
+  "turn": "2",
+  "vexp": "3",
+  "virt": "3"
+}
