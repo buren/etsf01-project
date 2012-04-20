@@ -1,15 +1,11 @@
 package controller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import conversion.Converter;
 
 public class EffortEstimation {
@@ -19,16 +15,13 @@ public class EffortEstimation {
 	 *********************************************/
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "temp1", "temp2" };
+		"MODP", "TOOL", "SCED", "Size[kloc]", "temp1", "temp2", "temp3", "temp4" };
 
 	
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.78;
-	private static final String FILEPATH_FOR_FUTURE_PROJECT = "files/futureproject.json";
-
-
+	private double SIMILARITY_THRESHOLD = 0.83;
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
@@ -79,24 +72,66 @@ s	 */
 				Iterator projIter = project.sortedKeys();
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
-					if (!attribute.equals("size[kloc]") && !attribute.equals("effort[pm]")) {
-						int futureValue = Integer.parseInt((String) futureProject.get(attribute));
-						int oldValue = Integer.parseInt((String) project.get(attribute));
-						distanceSum += distance(futureValue, oldValue, 5, 0);
+					double maxDistance = maximumDistance(attribute);
+					if (!attribute.equals("effort[pm]") && !attribute.equals("similarity")) {
+						double futureValue = Double.parseDouble(futureProject.get(attribute).toString());
+						double oldValue = Double.parseDouble(project.get(attribute).toString());
+						distanceSum += weight(attribute) * distance(futureValue, oldValue, maxDistance);
 						nbrOfAttributes++;
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
-				if (similarity > SIMILARITY_THRESHOLD) {
+				if (similarity > SIMILARITY_THRESHOLD && similarity < 1) {
 					project.put("similarity", similarity);
 					listOfSimilarProjects.put(index, project);
 					
 				}
 			} catch (JSONException e) {
-				e.printStackTrace();
+				double futureValue = 0;
 			}
 		}
 		return listOfSimilarProjects;
+	}
+	
+	private double weight(String attribute) {
+		if (attribute.equals("size[kloc]")) {
+			return 1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * Returns the maximum distance for an attribute in the database.
+	 * @param attribute
+	 * @return
+	 */
+	private double maximumDistance(String attribute) {
+		if (!attribute.equals("size[kloc]")) {
+			return 5;
+		}
+		double min = Integer.MAX_VALUE;
+		double max = 0;
+		Iterator iter = database.sortedKeys();
+		while (iter.hasNext()) {
+			String index = (String) iter.next();
+				JSONObject project;
+				try {
+					project = (JSONObject) database.get(index);
+					double value = Double.parseDouble((String) project.get(attribute));
+					if (value < min)
+						min = value;
+					if (value > max )
+						max = value;
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return max - min;
 	}
 	
 	/**
@@ -104,25 +139,28 @@ s	 */
 	 * of those attributes.
 	 * @param value1
 	 * @param value2
-	 * @param max
+	 * @param maxDistance
 	 * @param min
 	 * @return the euclidean distance 
 	 */
-	public double distance(double value1, double value2, double max, double min) {
-		return (Math.abs(value1 - value2) / (max - min))
-			 * (Math.abs(value1 - value2) / (max - min));
+	public double distance(double value1, double value2, double maxDistance) {
+		return (Math.abs(value1 - value2) / (maxDistance))
+			 * (Math.abs(value1 - value2) / (maxDistance));
 	}
 	
 	/**
 	 * Calculates the effort, in person-hours, for a project based on a list of similar projects.
 	 * @param listOfSimilarProjects
 	 */
-	public int calculateEffortEstimation(JSONObject listOfSimilarProjects){
+	public int calculateEffortEstimation(JSONObject futureProject){
 		double est = 0;
 		double effort = 0;
 		double similarity = 0;
-		Iterator it = listOfSimilarProjects.keys();
-		while (it.hasNext()) { 
+		JSONObject listOfSimilarProjects = calculateSimilarity(futureProject);
+		Iterator it = listOfSimilarProjects.sortedKeys();
+		int count = 0;
+		while (it.hasNext()) {
+			count++;
 			try {
 				JSONObject proj = database.getJSONObject((String) it.next());
 				effort = Double.parseDouble(proj.getString("effort[pm]"));
@@ -134,6 +172,7 @@ s	 */
 				System.err.println("EffortEstimation.calculateTimeEstimation: Missing effort value in database");
 				e.printStackTrace();
 			}
+			
 			est += similarity * effort;
 		}
 		est /= listOfSimilarProjects.length();
@@ -146,8 +185,11 @@ s	 */
 	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
-		JSONObject similarProjects = calculateSimilarity(new JSONObject(futureProject));
-		double effortEstimation = calculateEffortEstimation(similarProjects);
-		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effortEstimation));
+		Set<String> keys = futureProject.keySet();
+		for (String s : keys) {
+			System.out.println("Key = " + s + " Value = " + futureProject.get(s));
+		}
+		int effort = calculateEffortEstimation(new JSONObject(futureProject));
+		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));
 	}
 }

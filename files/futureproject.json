@@ -3,6 +3,7 @@
   "aexp": "3",
   "cplx": "3",
   "data": "3",
+<<<<<<< HEAD
   "effort[pm]": "0",
   "lexp": "3",
   "modp": "3",
@@ -14,6 +15,20 @@
   "stor": "3",
   "temp1": "0",
   "temp2": "0",
+=======
+  "effort[pm]": "276",
+  "lexp": "3",
+  "modp": "3",
+  "pcap": "3",
+  "rely": "3",
+  "sced": "3",
+  "size[kloc]": "5",
+  "stor": "3",
+  "temp1": "0",
+  "temp2": "0",
+  "temp3": "0",
+  "temp4": "0",
+>>>>>>> 8897cdf1be8916c6d8d69f6ecade3a92b29a628e
   "time": "3",
   "tool": "3",
   "turn": "3",

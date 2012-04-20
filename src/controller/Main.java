@@ -16,13 +16,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new  Main().run();
+		run();
 	}
 	
 	/*********************************************
 	 * Public methods
 	 *********************************************/
-	public void run() {
+	public static void run() {
 		JSONDatabase database = JSONDatabase.getInstance();
 //		System.out.println(database.print());
 		new GUI(database.getDatabaseAsJSONObject());

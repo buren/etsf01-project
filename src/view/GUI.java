@@ -131,10 +131,15 @@ public class GUI implements ActionListener {
 			for (int col = 0; col < COLUMNS; col++) {
 				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
-				}else
+				}else {
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
+				}
 			}
 		}
+//		Set<String> keys = project.keySet();
+//		for (String s : keys) {
+//			System.out.println("Key = " + s + " Value = " + project.get(s));
+//		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
 		System.out.println(result);
 		resultField.setText(result);
@@ -199,8 +204,6 @@ public class GUI implements ActionListener {
 		else
 			clearGUI();
 	}	
-	
-	
 	
 	
 	/*********************************************
