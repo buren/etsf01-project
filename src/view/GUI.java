@@ -136,11 +136,11 @@ public class GUI implements ActionListener {
 			}
 		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
+		System.out.println(result);
 		resultField.setText(result);
 		project.put("effort[pm]", result);
 		writeToFile(project);
 	}
-	
 	
 	private boolean validateStartValuesFromGUI(){
 		boolean allFieldsValid = true;
