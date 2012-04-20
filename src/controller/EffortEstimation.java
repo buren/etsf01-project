@@ -21,7 +21,7 @@ public class EffortEstimation {
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.83;
+	private double SIMILARITY_THRESHOLD = 0.80;
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
@@ -67,6 +67,7 @@ s	 */
 			double distanceSum = 0;
 			int nbrOfAttributes = 0;
 			String index = (String) iter.next();
+			double futureValue = 0;
 			try {
 				JSONObject project = (JSONObject) database.get(index);
 				Iterator projIter = project.sortedKeys();
@@ -74,20 +75,24 @@ s	 */
 					String attribute = (String) projIter.next();
 					double maxDistance = maximumDistance(attribute);
 					if (!attribute.equals("effort[pm]") && !attribute.equals("similarity")) {
-						double futureValue = Double.parseDouble(futureProject.get(attribute).toString());
-						double oldValue = Double.parseDouble(project.get(attribute).toString());
-						distanceSum += weight(attribute) * distance(futureValue, oldValue, maxDistance);
-						nbrOfAttributes++;
+						if (futureProject.has(attribute)) {
+							futureValue = Double.parseDouble(futureProject.get(attribute).toString());
+							if (futureValue > 0) {
+								double oldValue = Double.parseDouble(project.get(attribute).toString());
+								distanceSum += weight(attribute) * distance(futureValue, oldValue, maxDistance);
+								nbrOfAttributes++;
+							}
+						}
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
 				if (similarity > SIMILARITY_THRESHOLD && similarity < 1) {
 					project.put("similarity", similarity);
-					listOfSimilarProjects.put(index, project);
-					
+					listOfSimilarProjects.put(index, project);	
 				}
 			} catch (JSONException e) {
-				double futureValue = 0;
+				System.out.print("JSON error!");
+				System.exit(1);
 			}
 		}
 		return listOfSimilarProjects;
@@ -95,7 +100,7 @@ s	 */
 	
 	private double weight(String attribute) {
 		if (attribute.equals("size[kloc]")) {
-			return 1;
+			return 0.1;
 		} else {
 			return 1;
 		}
@@ -185,10 +190,6 @@ s	 */
 	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
-		Set<String> keys = futureProject.keySet();
-		for (String s : keys) {
-			System.out.println("Key = " + s + " Value = " + futureProject.get(s));
-		}
 		int effort = calculateEffortEstimation(new JSONObject(futureProject));
 		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));
 	}

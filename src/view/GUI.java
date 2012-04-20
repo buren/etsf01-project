@@ -97,14 +97,14 @@ public class GUI implements ActionListener {
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 
-		// Creates the 4x5 view for the GUI 
+		// Creates the 4x5 view for the GUI
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
 				matrixBoxValue = new JTextField();
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
 				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 18));
-				matrixBoxValue.setText( IDENTIFIER + EffortEstimation.TYPES[index++]);
+				matrixBoxValue.setText(IDENTIFIER + EffortEstimation.TYPES[index++]);
 				matrixPanel[r][c] = matrixBoxValue;
 				mainPanel.add(matrixBoxValue);
 			}
@@ -112,12 +112,9 @@ public class GUI implements ActionListener {
 		frame.setVisible(true);
 	}
 	
-	
 	/*********************************************
 	 * GUI METHODS
 	 *********************************************/
-
-
 	/**
 	 * Collects the values that are inputed in GUI.
 	 * If a field still has its default value, NO_INPUT is added to the the field.
