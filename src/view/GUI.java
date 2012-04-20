@@ -25,8 +25,8 @@ public class GUI implements ActionListener {
 	 *********************************************/
 	// Contstants and indentifiers
 	private static final String NO_INPUT = "0";
-	private static final int ROWS = 4;
-	private static final int COLUMNS = 5;
+	private static final int ROWS = 5;
+	private static final int COLUMNS = 4;
 	private static final String IDENTIFIER = "#";
 	private static final String LINE_ENDING = "\r\n";
 	private static final String FUTURE_PROJECT_PATH = "files/futureproject.json";
@@ -35,6 +35,8 @@ public class GUI implements ActionListener {
 	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
+	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
+	private static final String ERR_MSG_FORMAT = "Enter number!";
 
 	/*********************************************
 	 * CLASS OBJECTS
@@ -97,18 +99,22 @@ public class GUI implements ActionListener {
 		frame.add(mainPanel2, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 
-		// Creates the 4x5 view for the GUI
+		// Creates the matrix view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
-				matrixBoxValue = new JTextField();
+				JLabel typeLabel = new JLabel(EffortEstimation.TYPES[index++] + ": ", SwingConstants.RIGHT);
+//				int textFieldSize = Math.max(ERR_MSG_INTERVAL.length(), ERR_MSG_FORMAT.length());
+				int textFieldSize = 8;
+				matrixBoxValue = new JTextField(textFieldSize);
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
-				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 18));
-				matrixBoxValue.setText(IDENTIFIER + EffortEstimation.TYPES[index++]);
+				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 10));
 				matrixPanel[r][c] = matrixBoxValue;
+				mainPanel.add(typeLabel);
 				mainPanel.add(matrixBoxValue);
 			}
 		}
+		frame.pack();
 		frame.setVisible(true);
 	}
 	
@@ -126,7 +132,7 @@ public class GUI implements ActionListener {
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
+				if(matrixPanel[row][col].getText().equals("")){
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
 				}else {
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
@@ -138,6 +144,7 @@ public class GUI implements ActionListener {
 //			System.out.println("Key = " + s + " Value = " + project.get(s));
 //		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
+		System.out.println(result);
 		resultField.setText(result);
 		project.put("effort[pm]", result);
 		writeToFile(project);
@@ -147,21 +154,23 @@ public class GUI implements ActionListener {
 		boolean allFieldsValid = true;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
+				if(matrixPanel[row][col].getText().equals("")){
 					matrixPanel[row][col].setBackground(Color.DARK_GRAY);
+				} else if (row == 3 && col == 3) {
+					// Size[kloc]
 				}else{
 					try{
 						int value = Integer.parseInt((matrixPanel[row][col].getText()));
 						if (value < 0 || value > 6){
 							matrixPanel[row][col].setBackground(Color.RED);
-							matrixPanel[row][col].setText("Allowed: 1-6");
+							matrixPanel[row][col].setText(ERR_MSG_INTERVAL);
 							allFieldsValid = false;
 						}else{
 							matrixPanel[row][col].setBackground(Color.LIGHT_GRAY);
 						}
 					}catch(NumberFormatException e){ 
 						matrixPanel[row][col].setBackground(Color.RED);
-						matrixPanel[row][col].setText("Insert number!");
+						matrixPanel[row][col].setText(ERR_MSG_FORMAT);
 						allFieldsValid = false;
 					}
 				}
@@ -177,10 +186,9 @@ public class GUI implements ActionListener {
 	 */
 	private void clearGUI() {
 		// TODO: actionPerformed doesn't recognize that the user has pressed the Clear button. 
-		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				matrixPanel[row][col].setText(IDENTIFIER + EffortEstimation.TYPES[index++]);
+				matrixPanel[row][col].setText("");
 				matrixPanel[row][col].setBackground(Color.LIGHT_GRAY);
 			}
 		}
