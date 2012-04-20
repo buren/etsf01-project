@@ -131,16 +131,20 @@ public class GUI implements ActionListener {
 			for (int col = 0; col < COLUMNS; col++) {
 				if(matrixPanel[row][col].getText().contains(IDENTIFIER)){
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
-				}else
+				}else {
 					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
+				}
 			}
 		}
+//		Set<String> keys = project.keySet();
+//		for (String s : keys) {
+//			System.out.println("Key = " + s + " Value = " + project.get(s));
+//		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
 		resultField.setText(result);
 		project.put("effort[pm]", result);
 		writeToFile(project);
 	}
-	
 	
 	private boolean validateStartValuesFromGUI(){
 		boolean allFieldsValid = true;
@@ -199,8 +203,6 @@ public class GUI implements ActionListener {
 		else
 			clearGUI();
 	}	
-	
-	
 	
 	
 	/*********************************************

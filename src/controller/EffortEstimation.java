@@ -1,15 +1,11 @@
 package controller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import conversion.Converter;
 
 public class EffortEstimation {
@@ -19,15 +15,13 @@ public class EffortEstimation {
 	 *********************************************/
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "temp1", "temp2" };
+		"MODP", "TOOL", "SCED", "Size[kloc]", "temp1", "temp2", "temp3", "temp4" };
 
 	
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.85;
-	private static final String FILEPATH_FOR_FUTURE_PROJECT = "files/futureproject.json";
-
+	private double SIMILARITY_THRESHOLD = 0.83;
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
@@ -87,13 +81,13 @@ s	 */
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
-				if (similarity > SIMILARITY_THRESHOLD) {
+				if (similarity > SIMILARITY_THRESHOLD && similarity < 1) {
 					project.put("similarity", similarity);
 					listOfSimilarProjects.put(index, project);
 					
 				}
 			} catch (JSONException e) {
-				e.printStackTrace();
+				double futureValue = 0;
 			}
 		}
 		return listOfSimilarProjects;
@@ -170,7 +164,6 @@ s	 */
 			try {
 				JSONObject proj = database.getJSONObject((String) it.next());
 				effort = Double.parseDouble(proj.getString("effort[pm]"));
-				System.out.println(effort);
 				similarity = Double.parseDouble(proj.getString("similarity"));
 			} catch (NumberFormatException e) {
 				System.err.println("EffortEstimation.calculateTimeEstimation: Bad effort value in database");
@@ -192,6 +185,11 @@ s	 */
 	 * @return the time estimation for the project
 	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
-		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, calculateEffortEstimation(calculateSimilarity(new JSONObject(futureProject)))));
+		Set<String> keys = futureProject.keySet();
+		for (String s : keys) {
+			System.out.println("Key = " + s + " Value = " + futureProject.get(s));
+		}
+		int effort = calculateEffortEstimation(new JSONObject(futureProject));
+		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));
 	}
 }

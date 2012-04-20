@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import controller.EffortEstimation;
+import conversion.Converter;
 
 public class TestEffortEstimation {
 
@@ -70,14 +71,14 @@ public class TestEffortEstimation {
 	@Test
 	public void testSimilarity() throws JSONException{
 		JSONObject db = database.getDatabaseAsJSONObject();
-		JSONObject futureProject = database.getOneProjectAsJSONObject("1");
+		JSONObject futureProject = database.getOneProjectAsJSONObject("2");
 
 		JSONObject similarList = estimator.calculateSimilarity(futureProject);
 		Iterator iter = similarList.sortedKeys();
 		while(iter.hasNext()) {
 			String index = (String) iter.next();
 			JSONObject project = (JSONObject) similarList.get(index);
-			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
+//			System.out.println("Similarity between future project and project " + index + " is " + project.get("similarity"));
 		}
 	}
 	
@@ -108,22 +109,11 @@ public class TestEffortEstimation {
 	
 	@Test
 	public void testPredictEffort() throws JSONException{
-		JSONObject db = database.getDatabaseAsJSONObject();
 		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
-		JSONObject futureProject = null;
-		int closeEnough  = 0;
-		for (int i = 1; i < db.length(); i++) {
-			futureProject = database.getOneProjectAsJSONObject("" + i);
-			if (futureProject.has("size[kloc]")) {
-				db.remove("" + i);
-				int predEffort = estimator.calculateEffortEstimation(futureProject);
-				double realEffort = Double.parseDouble((String) futureProject.get("effort[pm]"));
-				double precision = Math.abs(realEffort - predEffort) / realEffort;
-				if (precision < 0.30) {
-					closeEnough++;
-				}
-				db.put("" + i, futureProject);
-			}
+		for (int i = 0; i < 50; i++) {
+			JSONObject futureProject = database.getOneProjectAsJSONObject("" + i);
+			int effort = estimator.calculateEffortEstimation(futureProject);
+			System.out.println("Effort for project " + i + " = " + Converter.convertToMonths(Converter.HOURS, effort));	
 		}
 	}
 				
