@@ -135,6 +135,9 @@ public class JSONDatabase
 				// Puts type as key and its corresponding value for that columns
 				// 0..16 is the number of columns to be added
 				String attr = lineAttributes[i].trim();
+				// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+				//  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+				// Ska vi köra 1-6 istället??
 				if (attr.equalsIgnoreCase("very_low"))
 					attr = "0";
 				else if (attr.equalsIgnoreCase("low"))
