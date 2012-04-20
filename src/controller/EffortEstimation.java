@@ -25,7 +25,7 @@ public class EffortEstimation {
 	/*********************************************
 	 * PRIVATE CONSTANTS
 	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.83;
+	private double SIMILARITY_THRESHOLD = 0.85;
 	private static final String FILEPATH_FOR_FUTURE_PROJECT = "files/futureproject.json";
 
 	/*********************************************
@@ -79,10 +79,10 @@ s	 */
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
 					double maxDistance = maximumDistance(attribute);
-					if (!attribute.equals("effort[pm]")) {
-						double futureValue = Double.parseDouble((String) futureProject.get(attribute));
-						double oldValue = Double.parseDouble((String) project.get(attribute));
-						distanceSum += distance(futureValue, oldValue, maxDistance);
+					if (!attribute.equals("effort[pm]") && !attribute.equals("similarity")) {
+						double futureValue = Double.parseDouble(futureProject.get(attribute).toString());
+						double oldValue = Double.parseDouble(project.get(attribute).toString());
+						distanceSum += weight(attribute) * distance(futureValue, oldValue, maxDistance);
 						nbrOfAttributes++;
 					}
 				}
@@ -99,6 +99,19 @@ s	 */
 		return listOfSimilarProjects;
 	}
 	
+	private double weight(String attribute) {
+		if (attribute.equals("size[kloc]")) {
+			return 1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * Returns the maximum distance for an attribute in the database.
+	 * @param attribute
+	 * @return
+	 */
 	private double maximumDistance(String attribute) {
 		if (!attribute.equals("size[kloc]")) {
 			return 5;
@@ -145,15 +158,19 @@ s	 */
 	 * Calculates the effort, in person-hours, for a project based on a list of similar projects.
 	 * @param listOfSimilarProjects
 	 */
-	public int calculateEffortEstimation(JSONObject listOfSimilarProjects){
+	public int calculateEffortEstimation(JSONObject futureProject){
 		double est = 0;
 		double effort = 0;
 		double similarity = 0;
-		Iterator it = listOfSimilarProjects.keys();
-		while (it.hasNext()) { 
+		JSONObject listOfSimilarProjects = calculateSimilarity(futureProject);
+		Iterator it = listOfSimilarProjects.sortedKeys();
+		int count = 0;
+		while (it.hasNext()) {
+			count++;
 			try {
 				JSONObject proj = database.getJSONObject((String) it.next());
 				effort = Double.parseDouble(proj.getString("effort[pm]"));
+				System.out.println(effort);
 				similarity = Double.parseDouble(proj.getString("similarity"));
 			} catch (NumberFormatException e) {
 				System.err.println("EffortEstimation.calculateTimeEstimation: Bad effort value in database");
@@ -162,6 +179,7 @@ s	 */
 				System.err.println("EffortEstimation.calculateTimeEstimation: Missing effort value in database");
 				e.printStackTrace();
 			}
+			
 			est += similarity * effort;
 		}
 		est /= listOfSimilarProjects.length();
