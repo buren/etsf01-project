@@ -109,7 +109,6 @@ public class TestEffortEstimation {
 	
 	@Test
 	public void testPredictEffort() throws JSONException{
-		EffortEstimation estimator = new EffortEstimation(database.getDatabaseAsJSONObject());
 		for (int i = 0; i < 50; i++) {
 			JSONObject futureProject = database.getOneProjectAsJSONObject("" + i);
 			int effort = estimator.calculateEffortEstimation(futureProject);
