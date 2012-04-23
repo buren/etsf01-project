@@ -1,14 +1,7 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.json.*;
 
@@ -21,6 +14,7 @@ public class JSONDatabase
 	/*********************************************
 	 * public constants
 	 *********************************************/
+	// TODO: This is too long because of the offset in databaseAlt2. FIX IT!
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
 		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "RELY", "DATA", "CPLX", "TIME",
@@ -60,10 +54,12 @@ public class JSONDatabase
 	private JSONObject jsonObject;
 	private Integer index;
 	private ArrayList<HashMap<String, String>> rowList;
+	private FileHandler fileHandler;
+
 	
 		
 	/*********************************************
-	 * Constructors
+	 * Constructor
 	 *********************************************/
 	
 	/**
@@ -76,25 +72,26 @@ public class JSONDatabase
     private JSONDatabase() {
     	index = 0;
     	jsonObject = new JSONObject();
+    	fileHandler = new FileHandler();
     	//TODO: Find a pretty way to append data to the jsonObjects
-    	FileHandler fileHandler = new FileHandler(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS);
-		String db = "";
+		String db;
+		db = fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
+		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
+		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
+		JSONTokener tokener = new JSONTokener(db);
 		try {
-			db = fileHandler.readDatabase().toString(2);
-			System.out.println("length is " + db.length());
-			fileHandler = new FileHandler(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS);
-			db += fileHandler.readDatabase().toString(2);	
-			System.out.println("length is " + db.length());
-			fileHandler = new FileHandler(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS);
-			db += fileHandler.readDatabase().toString(2);
-			System.out.println("length is " + db.length());
-			JSONTokener tokener = new JSONTokener(db);
 			jsonObject = new JSONObject(tokener);
-		}catch(JSONException e){
-			System.exit(1);
+		} catch (JSONException e) {
+			System.err.println("JSONDatabase constructor: JSONTokener failed!");
 		}
     }
     
+    
+
+    
+    /*********************************************
+	 * Public methods
+	 *********************************************/
     /**
      * Reads the user defined database file and adds it to the database. 
      * @param inputPath path to the database.
@@ -102,47 +99,33 @@ public class JSONDatabase
      * @param ignorePattern lines beginning with this pattern will be ignored. 
      * @param numberOfAttributes which columns will be included. 
      */
-    public void addDatabase(String inputPath, String delimiter, String ignorePattern, String includedColumns, String[] valueNames, int timeUnit){
-    	FileHandler fileHandler = new FileHandler(inputPath, delimiter, ignorePattern, includedColumns, valueNames, timeUnit);
+    public synchronized void addDatabase(String inputPath, String delimiter, String ignorePattern, String includedColumns, String[] valueNames, int timeUnit){
     	// Reads the database
     	//TODO: Find a pretty way to append data to the jsonObject
     	try {
-			String db = jsonObject.toString() + fileHandler.readDatabase().toString(0);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String db = jsonObject.toString() + fileHandler.readDatabase(inputPath, delimiter, ignorePattern, includedColumns, valueNames, timeUnit).toString();
+			JSONTokener tokener = new JSONTokener(db);
+			jsonObject = new JSONObject(tokener);
+    	} catch (JSONException e) {
+			System.err.println("JSONDatabase.addDatabase(): JSONTokener failed!");
 		}
     }
     
-	/**
-	 * Returns the number of projects added to the database
-	 * @return number of projects in database
-	 */
-	public Integer getTotalNumberOfProjects(){
-		return index;
-	}
 	
-    /**
-     * Singleton getter method
-     * @return		a singleton instance of JSONDatase
-     */
-    public static JSONDatabase getInstance() 
-    {
-        return SingletonHolder.instance;
-    }
-
-    /**
-    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
-    * or the first access to SingletonHolder.INSTANCE, not before.
-    */
-    private static class SingletonHolder 
-    { 
-    	public static final JSONDatabase instance = new JSONDatabase();
-    }
-    
+   
     /*********************************************
 	 * Getters
 	 *********************************************/
+    
+    
+    /**
+     * Returns the entire database as a JSONObject.
+     * 
+     * @return the entire database as a JSONObject.
+     */
+    public JSONObject getDatabaseAsJSONObject() {
+		return jsonObject;
+	}
    
 	/**
 	 * Returns the entire specified project and returns it as a {@link JSONObject}.
@@ -161,43 +144,43 @@ public class JSONDatabase
 		return null;
 	}
 	
-	  /**
-     * Returns the object associated with the key. 
-     * @param key	identifier key 
-     * @return 		value of object associated with key
-     */
-    public Object getJSONValueForKey(String key)
-    {
-    	if(jsonObject.has(key))
-    	{
-			try {
-				return jsonObject.get(key);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-    	}
-    	return null;
-    }
-
 
     /***********************************************************
      * Misc. methods
      **********************************************************/
+	
+	
+	/**
+     * Singleton getter method
+     * @return		a singleton instance of JSONDatabase
+     */
+    public static JSONDatabase getInstance() 
+    {
+        return SingletonHolder.instance;
+    }
+
+    /**
+    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
+    * or the first access to SingletonHolder.INSTANCE, not before.
+    */
+    private static class SingletonHolder 
+    { 
+    	public static final JSONDatabase instance = new JSONDatabase();
+    }
     
 
     /**
+     * Writes the JSONDatabase to path 
+     */
+    public void writeJSONtoFile(String path, JSONObject jsonObj) {
+    	fileHandler.writeJSONtoFile(path, jsonObj);
+    }
+    
+    /**
      * Writes the JSONDatabase to file <i>{@value DATABASE_OUTPUT_PATH}</i>. 
      */
-    public void writeJSONtoFile() {
-    	FileWriter fileWriter;
-		try {
-			fileWriter = new FileWriter(DATABASE_OUTPUT_PATH);
-	    	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	    	bufferedWriter.write(jsonObject.toString());
-	    	bufferedWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    public void writeJSONtoFile(JSONObject jsonObj) {
+    	fileHandler.writeJSONtoFile(DATABASE_OUTPUT_PATH, jsonObj);
     }
     
     /** 
@@ -208,15 +191,10 @@ public class JSONDatabase
     	try {
 			return jsonObject.toString(3);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
     	return null;
     }
-
-
-
-	public JSONObject getDatabaseAsJSONObject() {
-		return jsonObject;
-	}
+    
+    
+    
 }
