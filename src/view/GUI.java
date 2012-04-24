@@ -60,15 +60,15 @@ public class GUI implements ActionListener {
 	 * Creates the GUI with default input values 
 	 * and inits {@link EffortEstimation} with the database.
 	 */
-	public GUI(JSONObject database) {
+	public GUI(JSONObject database, String[] defaultLabels) {
 		effortEstimation = new EffortEstimation(database);
-		initGUI();
+		initGUI(defaultLabels);
 	}
 	/** 
 	 * Inits the GUI. 
 	 * Creates the entire view. 
 	 */
-	private void initGUI() {
+	private void initGUI(String[] defaultLabels) {
 		
 		JPanel mainPanelSouth  = new JPanel();
 		JPanel mainPanelNorth = new JPanel();
@@ -112,7 +112,12 @@ public class GUI implements ActionListener {
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
-				JLabel typeLabel = new JLabel(EffortEstimation.TYPES[index++] + ": ", SwingConstants.RIGHT);
+				JLabel typeLabel;
+				if(defaultLabels.length <= index || defaultLabels == null){
+					typeLabel = new JLabel("Label " + index++ + ": ", SwingConstants.RIGHT);
+				}else{
+					typeLabel = new JLabel(defaultLabels[index++] + ": ", SwingConstants.RIGHT);
+				}
 //				int textFieldSize = Math.max(ERR_MSG_INTERVAL.length(), ERR_MSG_FORMAT.length());
 				int textFieldSize = 8;
 				matrixBoxValue = new JTextField(textFieldSize);
@@ -188,6 +193,7 @@ public class GUI implements ActionListener {
 	
 	private void addNewDatabase() {
 		// TODO: IMPLEMENT!
+		
 	}
 	
 	private boolean validateStartValuesFromGUI(){

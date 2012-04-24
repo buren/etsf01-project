@@ -24,6 +24,6 @@ public class Main {
 	 *********************************************/
 	public static void run() {
 		JSONDatabase database = JSONDatabase.getInstance();
-		new GUI(database.getDatabaseAsJSONObject());
+		new GUI(database.getDatabaseAsJSONObject(), database.getDefaultLables());
 	}
 }

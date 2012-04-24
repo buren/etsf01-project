@@ -24,7 +24,7 @@ public class FileHandler {
 	 *********************************************/
 	private BufferedReader reader;
 	private ArrayList<Integer> includedColumns;
-
+	private String[] colNames;
 	
 	/*********************************************
 	 * constructor
@@ -64,12 +64,25 @@ public class FileHandler {
 			String line = sanitize(reader.readLine());
 			
 			// Identifiers for each project
-			while (line!=null){
-				while(ignoreLine(line, constructIgnorePattern(sanitize(ignorePattern)))) line = sanitize(reader.readLine());
-				// Adds each project (one line) to projectList
-				projectList.add(addAttributesFromLine(line, delimiter, valueNames, timeUnit));
+			while(ignoreLine(line, constructIgnorePattern(sanitize(ignorePattern)))) line = sanitize(reader.readLine());
+			// Gets the first readable line that contains all the column names
+			String[] columnNames;
+			// If statement to check whether the are any
+			// accepted lines in the file after the ignored ones. 
+			if (line != null){
+				columnNames = line.split(",");
+				this.colNames = columnNames;
 				line = sanitize(reader.readLine());
-				
+			}else{
+				return null;
+			}
+			
+
+			while (line!=null){
+				System.out.println(line);
+				// Adds each project (one line) to projectList
+				projectList.add(addAttributesFromLine(line, delimiter, valueNames, columnNames, timeUnit));
+				line = sanitize(reader.readLine());
 			} 
 			// Adds all the projects to responsJSON with associated UUID
 			for (HashMap<String, String> map : projectList)
@@ -86,8 +99,13 @@ public class FileHandler {
 		return responsJSON;
 	}
 	
+	public String[] getCurrentLabels(){
+		return colNames;
+	}
+	
+	
 	  /**
-     * Writes the JSONDatabase to file <i>{@value DATABASE_OUTPUT_PATH}</i>. 
+     * Writes jsonObject to file <i>{@value DATABASE_OUTPUT_PATH}</i>. 
 	 * @param path 
      */
     public void writeJSONtoFile(String path, JSONObject jsonObject) {
@@ -95,9 +113,11 @@ public class FileHandler {
 		try {
 			fileWriter = new FileWriter(path);
 	    	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	    	bufferedWriter.write(jsonObject.toString());
+	    	bufferedWriter.write(jsonObject.toString(2));
 	    	bufferedWriter.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
     }
@@ -114,16 +134,14 @@ public class FileHandler {
      * @param fileType - which type of input file is it?
      * @return a HashMap containing all the data. 
      */
-	private HashMap<String, String> addAttributesFromLine(String line, String delimiter, String[] valueNames, int timeUnit) {
+	private HashMap<String, String> addAttributesFromLine(String line, String delimiter, String[] valueNames, String[] columnNames, int timeUnit) {
 		String[] attributes = sanitize(line).split(delimiter); 
 			HashMap<String, String> project = new HashMap<String, String>(); 
 			for (Integer index : includedColumns){
-				if (JSONDatabase.TYPES[index].contains("effort"))
-					project.put(JSONDatabase.TYPES[index], String.valueOf(Converter.convertToHours(timeUnit, Double.parseDouble(attributes[index]))));
-				else {
-					project.put(JSONDatabase.TYPES[index], convertToDigits(attributes[index], valueNames));
-					System.out.println(convertToDigits(attributes[index], valueNames));
-				}
+				if (columnNames[index].contains("effort"))
+					project.put(columnNames[index], String.valueOf(Converter.convertToHours(timeUnit, Double.parseDouble(attributes[index]))));
+				else 
+					project.put(columnNames[index], convertToDigits(attributes[index], valueNames));
 			}
 			return project;
 	}
@@ -170,7 +188,7 @@ public class FileHandler {
 	 * @return true if the line shall be ignored false otherwise. 
 	 */
 	private boolean ignoreLine(String line, char[] ignorePattern){
-		if (line.equals("")) return true;
+		if (line.equals("") || line.equals("\n")) return true;
 		for (char ch : ignorePattern)
 			if (line.charAt(0) == ch) return true;
 		return false;

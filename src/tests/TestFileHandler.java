@@ -12,6 +12,7 @@ import model.JSONDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +20,10 @@ import conversion.Converter;
 
 public class TestFileHandler extends TestCase {
 	
+
+	/********************************************
+	 * private constants
+	 ********************************************/
 	private static final String EFFORTPM_COLUMN = "effort[pm]";
 	private static final String CPLX_COLUMN = "cplx";
 	private static final String RELY_COLUMN = "rely";
@@ -36,66 +41,38 @@ public class TestFileHandler extends TestCase {
 	private static final String FIRST_LINE_INDEX = "0";
 	private static final String LAST_LINE_INDEX = "152";
 	
-	
-	
-	private FileHandler fileHandler;private static final String[] VALUE_NAMES_FIRST = {"very_low", "low", "nominal",  "high", "very_high", "extra_high"};
+	private static final String[] VALUE_NAMES_FIRST = {"very_low", "low", "nominal",  "high", "very_high", "extra_high"};
 	private static final String[] VALUE_NAMES_SECOND = {"vl", "l", "n", "h", "vh", "xh"};
 	
+	
+	
 
+	/********************************************
+	 * test class objects
+	 ********************************************/
+	private FileHandler fileHandler;
 	private JSONDatabase database;
 	private JSONObject jsonObject;
 	
 	
 	@Before
 	public void setUp(){
-		 database = JSONDatabase.getInstance();
+		database = JSONDatabase.getInstance();	
 		fileHandler = new FileHandler();
-
 	}
 	
 	
 	@Test
-	public void testReadFirstDatabase(){
-			
-	//	try {
-			jsonObject = fileHandler.readDatabase("files/databaseINalt1.txt", ",", "%@", "0-16", VALUE_NAMES_FIRST , 2);
-			// TODO: Implemented complete test
-			// 		now its impossible to test since every projects
-			// 		is mapped to a UUID
-			/*
-			assertEquals(FIRST_LINE_RELY_VALUE , ((JSONObject) jsonObject.get(FIRST_LINE_INDEX)).get(RELY_COLUMN));
-			assertEquals(FIRST_LINE_CPLX_VALUE , ((JSONObject) jsonObject.get(FIRST_LINE_INDEX)).get(CPLX_COLUMN));
-			assertEquals(FIRST_LINE_EFFORT_VALUE, ((JSONObject) jsonObject.get(FIRST_LINE_INDEX)).get(EFFORTPM_COLUMN));
-			// Test last project
-			assertEquals(LAST_LINE_RELY_VALUE , ((JSONObject) jsonObject.get(LAST_LINE_INDEX)).get(RELY_COLUMN));
-			assertEquals(LAST_LINE_CPLX_VALUE , ((JSONObject) jsonObject.get(LAST_LINE_INDEX)).get(CPLX_COLUMN));
-			assertEquals(LAST_LINE_EFFORT_VALUE, ((JSONObject) jsonObject.get(LAST_LINE_INDEX)).get(EFFORTPM_COLUMN));
-			*/ 
-		//} 
-		//catch (JSONException e) {
-		//	e.printStackTrace();
-		//}	
+	public void testReadFirstDatabase() throws JSONException{
+		JSONTokener tokener = new JSONTokener(database.getDatabaseAsJSONObject().toString(2));
+		jsonObject = new JSONObject(tokener);
 	}
 	
-	@Test
-	public void testReadSecondDatabase(){
-		try {
-			fileHandler.readDatabase("files/databaseINalt2.txt", ",", "%@", "7-23", VALUE_NAMES_SECOND , 2).toString(2);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
 	
-
-	@Test
-	public void testReadThirdDatabase(){
-		try {
-			fileHandler.readDatabase("files/databaseINalt3.txt", ",", "%@", "0-14", VALUE_NAMES_SECOND , 2).toString(2);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
 	
+	/********************************************
+	 * test for private methods in FileHandler
+	 ********************************************/
 	
 	@Test
 	public void testConvertToDigits() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{

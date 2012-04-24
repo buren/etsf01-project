@@ -75,9 +75,11 @@ public class JSONDatabase
     	fileHandler = new FileHandler();
     	//TODO: Find a pretty way to append data to the jsonObjects
 		String db;
-		db = fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
-		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
-		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
+		db = fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
+		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
+
+		// TODO: Must normalize values of database3 before using it
+		//	db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
 		JSONTokener tokener = new JSONTokener(db);
 		try {
 			jsonObject = new JSONObject(tokener);
@@ -194,6 +196,13 @@ public class JSONDatabase
 		}
     	return null;
     }
+
+
+
+
+	public String[] getDefaultLables() {
+		return fileHandler.getCurrentLabels();
+	}
     
     
     
