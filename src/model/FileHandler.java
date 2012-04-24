@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class FileHandler {
 	 *********************************************/
 	public FileHandler(){
 		includedColumns = new ArrayList<Integer>();
+		colNames = new String[20];
 	}
 
 
@@ -71,7 +73,6 @@ public class FileHandler {
 			// accepted lines in the file after the ignored ones. 
 			if (line != null){
 				columnNames = line.split(",");
-				this.colNames = columnNames;
 				line = sanitize(reader.readLine());
 			}else{
 				return null;
@@ -79,7 +80,6 @@ public class FileHandler {
 			
 
 			while (line!=null){
-				System.out.println(line);
 				// Adds each project (one line) to projectList
 				projectList.add(addAttributesFromLine(line, delimiter, valueNames, columnNames, timeUnit));
 				line = sanitize(reader.readLine());
@@ -137,11 +137,17 @@ public class FileHandler {
 	private HashMap<String, String> addAttributesFromLine(String line, String delimiter, String[] valueNames, String[] columnNames, int timeUnit) {
 		String[] attributes = sanitize(line).split(delimiter); 
 			HashMap<String, String> project = new HashMap<String, String>(); 
+			int columnNamesIndex = 0;
 			for (Integer index : includedColumns){
-				if (columnNames[index].contains("effort"))
+				if (columnNames[index].contains("effort")){
 					project.put(columnNames[index], String.valueOf(Converter.convertToHours(timeUnit, Double.parseDouble(attributes[index]))));
-				else 
+					colNames[columnNamesIndex++] = String.valueOf(columnNames[index]);
+				}else{
 					project.put(columnNames[index], convertToDigits(attributes[index], valueNames));
+					colNames[columnNamesIndex++] = String.valueOf(columnNames[index]);
+					System.out.println("colindex: " + columnNamesIndex );
+					System.out.println("index : " + index);
+				}
 			}
 			return project;
 	}
@@ -242,6 +248,7 @@ public class FileHandler {
 				if (!includedColumns.contains(i))
 					includedColumns.add(i);
 		}
+		Collections.sort(includedColumns);
 	}
 	
 }
