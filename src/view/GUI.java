@@ -108,8 +108,6 @@ public class GUI implements ActionListener {
 		frame.add(mainPanelSouth, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 
-		for (String s : defaultLabels)
-			System.out.println(s);
 		// Creates the matrix view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {

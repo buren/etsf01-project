@@ -139,7 +139,7 @@ public class JSONDatabase
 			try {
 				return jsonObject.getJSONObject(key);
 			} catch (JSONException e) {
-				System.out.println("Key not found!");
+				System.err.println("Key not found!");
 				e.printStackTrace();
 			}
 		}

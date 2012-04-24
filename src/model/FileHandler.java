@@ -145,8 +145,6 @@ public class FileHandler {
 				}else{
 					project.put(columnNames[index], convertToDigits(attributes[index], valueNames));
 					colNames[columnNamesIndex++] = String.valueOf(columnNames[index]);
-					System.out.println("colindex: " + columnNamesIndex );
-					System.out.println("index : " + index);
 				}
 			}
 			return project;
