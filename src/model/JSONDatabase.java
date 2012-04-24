@@ -177,14 +177,14 @@ public class JSONDatabase
     }
     
     /**
-     * Writes the JSONDatabase to file <i>{@value DATABASE_OUTPUT_PATH}</i>. 
+     * Writes the JSONDatabase to <i>{@value DATABASE_OUTPUT_PATH}</i>. 
      */
     public void writeJSONtoFile(JSONObject jsonObj) {
     	fileHandler.writeJSONtoFile(DATABASE_OUTPUT_PATH, jsonObj);
     }
     
     /** 
-    * Returns the entire JSONObject as a string.
+    * Returns the entire JSONObject as a pretty formatted string.
     * @return the jsonObject as a string
     */
     public String print() {

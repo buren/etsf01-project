@@ -40,16 +40,16 @@ public class FileHandler {
 			
 	/**
 	 * Reads the database file and returns it as a {@link JSONObject}.
-	 * @param inputPath
-	 * @param delimiter
-	 * @param ignorePattern
-	 * @param includedColumns
-	 * @param valueNames
-	 * @param timeUnit
-	 * @return all read projects in a JSONObject
+	 * @param inputPath - full path for the database file
+	 * @param delimiter - delimiter between the columns
+	 * @param ignorePattern - lines beginning with each character in this string will be ignored
+	 * @param includedColumns - column indices to include (e.i {0,2,5..10} 
+	 * @param valueNames - if the values in the columns aren't numeric input the corresponding string 
+							i.e valueNames[0] = "very_low" will give every column with the value very_low 
+							the numeric value of 2
+	 * @param timeUnit - time unit (person-, years, months, days, hours) for effort[pX] column 
+	 * @return all retrieved projects in a JSONObject
 	 */
-	
-	
 	public JSONObject readDatabase(String inputPath, String delimiter, String ignorePattern, String includedColumns, String[] valueNames, int timeUnit){
 		this.includedColumns.clear();
 		JSONObject responsJSON = new JSONObject();
@@ -120,8 +120,10 @@ public class FileHandler {
 			for (Integer index : includedColumns){
 				if (JSONDatabase.TYPES[index].contains("effort"))
 					project.put(JSONDatabase.TYPES[index], String.valueOf(Converter.convertToHours(timeUnit, Double.parseDouble(attributes[index]))));
-				else 
+				else {
 					project.put(JSONDatabase.TYPES[index], convertToDigits(attributes[index], valueNames));
+					System.out.println(convertToDigits(attributes[index], valueNames));
+				}
 			}
 			return project;
 	}
@@ -194,7 +196,7 @@ public class FileHandler {
 	 * 							"1,2,6" argument will reuslt in {1,2,6}
 	 * 							"1,5,8..12" argument will result in {1,5,8,9,10,11,12}
 	 */
-	private void constructIncludedColumns(String includedCols) {
+	private ArrayList<Integer> constructIncludedColumns(String includedCols) {
 		String[] input = includedCols.split(",");
 		for (String value : input){
 			String[] attr = value.split("-");
@@ -202,8 +204,8 @@ public class FileHandler {
 				addRangeToArray(attr[0], attr[1]);
 			else
 				addRangeToArray(attr[0], attr[0]);
-				
 		}
+		return includedColumns;
 	}
 
 	/** 
@@ -222,10 +224,6 @@ public class FileHandler {
 				if (!includedColumns.contains(i))
 					includedColumns.add(i);
 		}
-		
 	}
-	
-	
-	
 	
 }

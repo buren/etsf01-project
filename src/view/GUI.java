@@ -35,17 +35,19 @@ public class GUI implements ActionListener {
 	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
+	private static final String ADD_DATABASE_BUTTON_LABEL = "Add database";
 	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
 	private static final String ERR_MSG_FORMAT = "Enter number!";
 
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
-	private JPanel mainPanel;
+	private JPanel mainPanelGrid;
 	private JTextField matrixBoxValue;
 	private JTextField[][] matrixPanel;
 	private JButton submitButton;
 	private JButton clearButton;
+	private JButton addDatabaseButton;
 	private JTextField resultField;
 	private EffortEstimation effortEstimation;
 
@@ -68,16 +70,22 @@ public class GUI implements ActionListener {
 	 */
 	private void initGUI() {
 		
-		JPanel mainPanel2  = new JPanel();
+		JPanel mainPanelSouth  = new JPanel();
+		JPanel mainPanelNorth = new JPanel();
 		// Label for the windows
 		JFrame frame = new JFrame(WINDOW_TITLE);
-		mainPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
+		mainPanelGrid = new JPanel(new GridLayout(ROWS, COLUMNS));
 		
 		
 		// Program will exit when pressing the "x" in the top right corner
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Default size of the window
 		frame.setSize(850, 600);
+		
+		addDatabaseButton = new JButton(ADD_DATABASE_BUTTON_LABEL);
+		mainPanelNorth.add(addDatabaseButton, BorderLayout.NORTH);
+		mainPanelNorth.add(addDatabaseButton);
+		addDatabaseButton.addActionListener(this);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -88,15 +96,16 @@ public class GUI implements ActionListener {
 		
 		resultField = new JTextField();
 		resultField.setText(RESULT_BUTTON_LABEL);
-		mainPanel2.add(resultField, BorderLayout.SOUTH);
-		mainPanel2.add(submitButton, BorderLayout.SOUTH);
-		mainPanel2.add(clearButton, BorderLayout.SOUTH);
+		mainPanelSouth.add(resultField, BorderLayout.SOUTH);
+		mainPanelSouth.add(submitButton, BorderLayout.SOUTH);
+		mainPanelSouth.add(clearButton, BorderLayout.SOUTH);
 
 		matrixPanel = new JTextField[ROWS][COLUMNS];
-		mainPanel2.add(submitButton);
-		mainPanel2.add(clearButton);
-		frame.add(mainPanel, BorderLayout.CENTER);
-		frame.add(mainPanel2, BorderLayout.SOUTH);
+		mainPanelSouth.add(submitButton);
+		mainPanelSouth.add(clearButton);
+		frame.add(mainPanelNorth, BorderLayout.NORTH);
+		frame.add(mainPanelGrid, BorderLayout.CENTER);
+		frame.add(mainPanelSouth, BorderLayout.SOUTH);
 		submitButton.addActionListener(this);
 
 		// Creates the matrix view for the GUI 
@@ -110,8 +119,8 @@ public class GUI implements ActionListener {
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
 				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 10));
 				matrixPanel[r][c] = matrixBoxValue;
-				mainPanel.add(typeLabel);
-				mainPanel.add(matrixBoxValue);
+				mainPanelGrid.add(typeLabel);
+				mainPanelGrid.add(matrixBoxValue);
 			}
 		}
 		frame.pack();
@@ -127,6 +136,7 @@ public class GUI implements ActionListener {
 	 * Calculates and returns the value of the estimation to the GUI
 	 * and writes the entire input and effort estimation to files/futureproject.json
 	 */
+	
 	public void collectStartValuesAndCalculateEffort()  {
 		HashMap<String, String> project = new HashMap<String, String>();
 		int index = 0;
@@ -144,10 +154,40 @@ public class GUI implements ActionListener {
 //			System.out.println("Key = " + s + " Value = " + project.get(s));
 //		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
-		System.out.println(result);
 		resultField.setText(result);
 		project.put("effort[pm]", result);
 		writeToFile(project);
+	}
+	
+	
+	
+	
+	/**
+	 * Actions performed by buttons.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(submitButton)){
+			if (validateStartValuesFromGUI()){
+				collectStartValuesAndCalculateEffort();
+			}
+		}		
+		else if (e.getSource().equals(clearButton)){
+			clearGUI();
+		}else if (e.getSource().equals(addDatabaseButton)){
+			addNewDatabase();
+		}
+			
+	}	
+	
+	
+	/*********************************************
+	 * PRIVATE HELPER METHODS
+	 *********************************************/
+	
+	
+	private void addNewDatabase() {
+		// TODO: IMPLEMENT!
 	}
 	
 	private boolean validateStartValuesFromGUI(){
@@ -193,27 +233,6 @@ public class GUI implements ActionListener {
 			}
 		}
 	}
-	
-	
-	/**
-	 * Actions performed by buttons.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(submitButton)){
-			if (validateStartValuesFromGUI()){
-				collectStartValuesAndCalculateEffort();
-			}
-		}		
-		else
-			clearGUI();
-	}	
-	
-	
-	/*********************************************
-	 * PRIVATE HELPER METHODS
-	 *********************************************/
-	
 	
 	/**
 	 * Writes the project to json formatted file (files/futureproject.json).
