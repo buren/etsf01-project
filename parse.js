@@ -9,7 +9,7 @@ $(window).load(function() {
 		console.log(jsonObject);
 
 		var newdiv = document.createElement('li');
-		newdiv.innerHTML =  "<p> "  +  jsonObject.acap +" </p>" +
+		newdiv.innerHTML =  "<p>The Result is: "  +  jsonObject.effort +" </p>" +
 							"<p> "  +  jsonObject.aexp +" </p>" +
 							"<p> "  +  jsonObject.cplx +" </p>";
 		document.getElementById('results').appendChild(newdiv);   

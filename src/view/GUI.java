@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 
+import model.JSONDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +37,7 @@ public class GUI implements ActionListener {
 	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
-	private static final String ADD_DATABASE_BUTTON_LABEL = "Add database";
+	private static final String READ_LOCAL_DATABASE_BUTTON_LABEL = "Read local databases";
 	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
 	private static final String ERR_MSG_FORMAT = "Enter number!";
 
@@ -47,22 +49,25 @@ public class GUI implements ActionListener {
 	private JTextField[][] matrixPanel;
 	private JButton submitButton;
 	private JButton clearButton;
-	private JButton addDatabaseButton;
+	private JButton readLLocalDatabaseButton;
 	private JTextField resultField;
 	private EffortEstimation effortEstimation;
+	private JSONDatabase database;
 
 
 	/*********************************************
 	 * CONSTRUCTOR
 	 *********************************************/
+	
 
 	/**
 	 * Creates the GUI with default input values 
 	 * and inits {@link EffortEstimation} with the database.
 	 */
-	public GUI(JSONObject database, String[] defaultLabels) {
-		effortEstimation = new EffortEstimation(database);
-		initGUI(defaultLabels);
+	public GUI() {
+		this.database = JSONDatabase.getInstance();
+		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
+		initGUI(database.getDefaultLables());
 	}
 	/** 
 	 * Inits the GUI. 
@@ -82,10 +87,10 @@ public class GUI implements ActionListener {
 		// Default size of the window
 		frame.setSize(850, 600);
 		
-		addDatabaseButton = new JButton(ADD_DATABASE_BUTTON_LABEL);
-		mainPanelNorth.add(addDatabaseButton, BorderLayout.NORTH);
-		mainPanelNorth.add(addDatabaseButton);
-		addDatabaseButton.addActionListener(this);
+		readLLocalDatabaseButton = new JButton(READ_LOCAL_DATABASE_BUTTON_LABEL);
+		mainPanelNorth.add(readLLocalDatabaseButton, BorderLayout.NORTH);
+		mainPanelNorth.add(readLLocalDatabaseButton);
+		readLLocalDatabaseButton.addActionListener(this);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -160,7 +165,7 @@ public class GUI implements ActionListener {
 //		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
 		resultField.setText(result);
-		project.put("effort[pm]", result);
+		project.put("effort", result);
 		writeToFile(project);
 	}
 	
@@ -179,8 +184,8 @@ public class GUI implements ActionListener {
 		}		
 		else if (e.getSource().equals(clearButton)){
 			clearGUI();
-		}else if (e.getSource().equals(addDatabaseButton)){
-			addNewDatabase();
+		}else if (e.getSource().equals(readLLocalDatabaseButton)){
+			readLocalDatabase();
 		}
 			
 	}	
@@ -191,9 +196,8 @@ public class GUI implements ActionListener {
 	 *********************************************/
 	
 	
-	private void addNewDatabase() {
-		// TODO: IMPLEMENT!
-		
+	private void readLocalDatabase() {
+		database.readLocalDatabase();
 	}
 	
 	private boolean validateStartValuesFromGUI(){

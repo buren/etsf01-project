@@ -52,8 +52,6 @@ public class JSONDatabase
 	 * CLASS OBJECTS
 	 *********************************************/
 	private JSONObject jsonObject;
-	private Integer index;
-	private ArrayList<HashMap<String, String>> rowList;
 	private FileHandler fileHandler;
 
 	
@@ -70,22 +68,23 @@ public class JSONDatabase
 	 *  
 	 */
     private JSONDatabase() {
-    	index = 0;
     	jsonObject = new JSONObject();
     	fileHandler = new FileHandler();
-    	//TODO: Find a pretty way to append data to the jsonObjects
-		String db = "";
-		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
-		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
+    	
+    	// TODO: Find a pretty way to append data to the jsonObjects
+    	// TODO: Remove this method since it's duplicated in readLocalDatabase();
+    	String db = "";
+    			db += fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
+    			db += fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
 
-		// TODO: Must normalize values of database3 before using it
-		//	db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
-		JSONTokener tokener = new JSONTokener(db);
-		try {
-			jsonObject = new JSONObject(tokener);
-		} catch (JSONException e) {
-			System.err.println("JSONDatabase constructor: JSONTokener failed!");
-		}
+    			// TODO: Must normalize numeric column values of database3 before using it
+    			//	db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
+    			JSONTokener tokener = new JSONTokener(db);
+    			try {
+    				jsonObject = new JSONObject(tokener);
+    			} catch (JSONException e) {
+    				System.err.println("JSONDatabase constructor: JSONTokener failed!");
+    			}
     }
     
     
@@ -94,6 +93,9 @@ public class JSONDatabase
     /*********************************************
 	 * Public methods
 	 *********************************************/
+    
+    
+    
     /**
      * Reads the user defined database file and adds it to the database. 
      * @param inputPath path to the database.
@@ -113,6 +115,25 @@ public class JSONDatabase
 		}
     }
     
+    /**
+     * Reads two of the locally stored database files. 
+     * And adds them to the JSONObject.
+     */
+    public synchronized void readLocalDatabase(){
+    	//TODO: Find a pretty way to append data to the jsonObjects
+		String db = "";
+		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
+		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_SECOND, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_SECOND, VALUE_NAMES_SECOND, Converter.MONTHS).toString();	
+
+		// TODO: Must normalize values of database3 before using it
+		//	db += fileHandler.readDatabase(DATABASE_INPUT_PATH_THIRD, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_THIRD, VALUE_NAMES_THIRD, Converter.MONTHS).toString();
+		JSONTokener tokener = new JSONTokener(db);
+		try {
+			jsonObject = new JSONObject(tokener);
+		} catch (JSONException e) {
+			System.err.println("JSONDatabase constructor: JSONTokener failed!");
+		}
+    }
 	
    
     /*********************************************
