@@ -62,6 +62,7 @@ public class GUI implements ActionListener {
 		effortEstimation = new EffortEstimation(database);
 		initGUI();
 	}
+		
 	/** 
 	 * Inits the GUI. 
 	 * Creates the entire view. 
