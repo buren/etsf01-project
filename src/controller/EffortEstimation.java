@@ -100,7 +100,7 @@ s	 */
 	
 	private double weight(String attribute) {
 		if (attribute.equals("size[kloc]")) {
-			return 0.1;
+			return 1;
 		} else {
 			return 1;
 		}

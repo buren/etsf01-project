@@ -1,4 +1,5 @@
 	Cost Driver	Sample Project Value	Description
+	
 	DATA	high	Database size.
 	CPLX	nominal	Product complexity.
 	TIME	nominal	Execution time constraint.
@@ -16,4 +17,3 @@
 	LTEX	low	Language and tools experience.
 	PCON	nominal	Personnel continuity.
 	SITE	nominal	Multisite development.
-\

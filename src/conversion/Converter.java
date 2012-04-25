@@ -47,7 +47,7 @@ public class Converter {
 			normalizedValue = value * HOURS_IN_YEAR;
 			break;
 		default: 
-			System.out.println("Invalid input to converter!");
+			System.err.println("Invalid input to converter!");
 			normalizedValue = value;
 			break;
 		}
