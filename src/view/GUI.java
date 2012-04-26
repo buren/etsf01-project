@@ -29,7 +29,6 @@ public class GUI implements ActionListener {
 	private static final String NO_INPUT = "0";
 	private static final int ROWS = 5;
 	private static final int COLUMNS = 4;
-	private static final String IDENTIFIER = "#";
 	private static final String LINE_ENDING = "\r\n";
 	private static final String FUTURE_PROJECT_PATH = "files/futureproject.json";
 	// Constants for the GUI
@@ -112,7 +111,6 @@ public class GUI implements ActionListener {
 		frame.add(mainPanelNorth, BorderLayout.NORTH);
 		frame.add(mainPanelGrid, BorderLayout.CENTER);
 		frame.add(mainPanelSouth, BorderLayout.SOUTH);
-		submitButton.addActionListener(this);
 
 		// Creates the matrix view for the GUI 
 		int index = 0;
