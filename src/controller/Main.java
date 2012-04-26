@@ -23,7 +23,7 @@ public class Main {
 	 * Public methods
 	 *********************************************/
 	public static void run() {
-		JSONDatabase database = JSONDatabase.getInstance();
-		new GUI(database.getDatabaseAsJSONObject());
+		
+		new GUI();
 	}
 }

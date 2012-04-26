@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 
+import model.JSONDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +29,6 @@ public class GUI implements ActionListener {
 	private static final String NO_INPUT = "0";
 	private static final int ROWS = 5;
 	private static final int COLUMNS = 4;
-	private static final String IDENTIFIER = "#";
 	private static final String LINE_ENDING = "\r\n";
 	private static final String FUTURE_PROJECT_PATH = "files/futureproject.json";
 	// Constants for the GUI
@@ -35,49 +36,61 @@ public class GUI implements ActionListener {
 	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
+	private static final String READ_LOCAL_DATABASE_BUTTON_LABEL = "Read local databases";
 	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
 	private static final String ERR_MSG_FORMAT = "Enter number!";
 
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
-	private JPanel mainPanel;
+	private JPanel mainPanelGrid;
 	private JTextField matrixBoxValue;
 	private JTextField[][] matrixPanel;
 	private JButton submitButton;
 	private JButton clearButton;
+	private JButton readLLocalDatabaseButton;
 	private JTextField resultField;
 	private EffortEstimation effortEstimation;
+	private JSONDatabase database;
 
 
 	/*********************************************
 	 * CONSTRUCTOR
 	 *********************************************/
+	
 
 	/**
 	 * Creates the GUI with default input values 
 	 * and inits {@link EffortEstimation} with the database.
 	 */
-	public GUI(JSONObject database) {
-		effortEstimation = new EffortEstimation(database);
-		initGUI();
+	public GUI() {
+		this.database = JSONDatabase.getInstance();
+		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
+		initGUI(database.getDefaultLables());
 	}
+		
 	/** 
 	 * Inits the GUI. 
 	 * Creates the entire view. 
 	 */
-	private void initGUI() {
+	private void initGUI(String[] defaultLabels) {
 		
-		JPanel mainPanel2  = new JPanel();
+		JPanel mainPanelSouth  = new JPanel();
+		JPanel mainPanelNorth = new JPanel();
 		// Label for the windows
 		JFrame frame = new JFrame(WINDOW_TITLE);
-		mainPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
+		mainPanelGrid = new JPanel(new GridLayout(ROWS, COLUMNS));
 		
 		
 		// Program will exit when pressing the "x" in the top right corner
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Default size of the window
 		frame.setSize(850, 600);
+		
+		readLLocalDatabaseButton = new JButton(READ_LOCAL_DATABASE_BUTTON_LABEL);
+		mainPanelNorth.add(readLLocalDatabaseButton, BorderLayout.NORTH);
+		mainPanelNorth.add(readLLocalDatabaseButton);
+		readLLocalDatabaseButton.addActionListener(this);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -88,30 +101,35 @@ public class GUI implements ActionListener {
 		
 		resultField = new JTextField();
 		resultField.setText(RESULT_BUTTON_LABEL);
-		mainPanel2.add(resultField, BorderLayout.SOUTH);
-		mainPanel2.add(submitButton, BorderLayout.SOUTH);
-		mainPanel2.add(clearButton, BorderLayout.SOUTH);
+		mainPanelSouth.add(resultField, BorderLayout.SOUTH);
+		mainPanelSouth.add(submitButton, BorderLayout.SOUTH);
+		mainPanelSouth.add(clearButton, BorderLayout.SOUTH);
 
 		matrixPanel = new JTextField[ROWS][COLUMNS];
-		mainPanel2.add(submitButton);
-		mainPanel2.add(clearButton);
-		frame.add(mainPanel, BorderLayout.CENTER);
-		frame.add(mainPanel2, BorderLayout.SOUTH);
-		submitButton.addActionListener(this);
+		mainPanelSouth.add(submitButton);
+		mainPanelSouth.add(clearButton);
+		frame.add(mainPanelNorth, BorderLayout.NORTH);
+		frame.add(mainPanelGrid, BorderLayout.CENTER);
+		frame.add(mainPanelSouth, BorderLayout.SOUTH);
 
 		// Creates the matrix view for the GUI 
 		int index = 0;
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
-				JLabel typeLabel = new JLabel(EffortEstimation.TYPES[index++] + ": ", SwingConstants.RIGHT);
+				JLabel typeLabel;
+				if(defaultLabels.length <= index || defaultLabels == null){
+					typeLabel = new JLabel("Label " + index++ + ": ", SwingConstants.RIGHT);
+				}else{
+					typeLabel = new JLabel(defaultLabels[index++] + ": ", SwingConstants.RIGHT);
+				}
 //				int textFieldSize = Math.max(ERR_MSG_INTERVAL.length(), ERR_MSG_FORMAT.length());
 				int textFieldSize = 8;
 				matrixBoxValue = new JTextField(textFieldSize);
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
 				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 10));
 				matrixPanel[r][c] = matrixBoxValue;
-				mainPanel.add(typeLabel);
-				mainPanel.add(matrixBoxValue);
+				mainPanelGrid.add(typeLabel);
+				mainPanelGrid.add(matrixBoxValue);
 			}
 		}
 		frame.pack();
@@ -127,6 +145,7 @@ public class GUI implements ActionListener {
 	 * Calculates and returns the value of the estimation to the GUI
 	 * and writes the entire input and effort estimation to files/futureproject.json
 	 */
+	
 	public void collectStartValuesAndCalculateEffort()  {
 		HashMap<String, String> project = new HashMap<String, String>();
 		int index = 0;
@@ -144,10 +163,37 @@ public class GUI implements ActionListener {
 //			System.out.println("Key = " + s + " Value = " + project.get(s));
 //		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
-		System.out.println(result);
 		resultField.setText(result);
-		project.put("effort[pm]", result);
+		project.put("effort", result);
 		writeToFile(project);
+	}
+	
+	/**
+	 * Actions performed by buttons.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(submitButton)){
+			if (validateStartValuesFromGUI()){
+				collectStartValuesAndCalculateEffort();
+			}
+		}		
+		else if (e.getSource().equals(clearButton)){
+			clearGUI();
+		}else if (e.getSource().equals(readLLocalDatabaseButton)){
+			readLocalDatabase();
+		}
+			
+	}	
+	
+	
+	/*********************************************
+	 * PRIVATE HELPER METHODS
+	 *********************************************/
+	
+	
+	private void readLocalDatabase() {
+		database.readLocalDatabase();
 	}
 	
 	private boolean validateStartValuesFromGUI(){
@@ -193,27 +239,6 @@ public class GUI implements ActionListener {
 			}
 		}
 	}
-	
-	
-	/**
-	 * Actions performed by buttons.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(submitButton)){
-			if (validateStartValuesFromGUI()){
-				collectStartValuesAndCalculateEffort();
-			}
-		}		
-		else
-			clearGUI();
-	}	
-	
-	
-	/*********************************************
-	 * PRIVATE HELPER METHODS
-	 *********************************************/
-	
 	
 	/**
 	 * Writes the project to json formatted file (files/futureproject.json).

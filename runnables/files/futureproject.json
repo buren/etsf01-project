@@ -1,23 +1,40 @@
 {
-  "acap": "4",
+  "acap": "0",
   "aexp": "0",
-  "cplx": "3",
+<<<<<<< HEAD
+  "cplx": "2",
   "data": "3",
-  "effort[pm]": "404",
+  "effort[pm]": "845",
   "lexp": "0",
   "modp": "0",
   "pcap": "0",
-  "rely": "3",
+  "rely": "4",
+  "sced": "0",
+  "size[kloc]": "20",
+  "stor": "4",
+=======
+  "cplx": "0",
+  "data": "0",
+  "effort": "0",
+  "lexp": "0",
+  "modp": "0",
+  "pcap": "0",
+  "rely": "0",
   "sced": "0",
   "size[kloc]": "0",
-  "stor": "4",
+  "stor": "0",
+>>>>>>> 90bf38f2d4ced0381b6497a5d76937448dae43ab
   "temp1": "0",
   "temp2": "0",
   "temp3": "0",
   "temp4": "0",
+<<<<<<< HEAD
   "time": "3",
+=======
+  "time": "0",
+>>>>>>> 90bf38f2d4ced0381b6497a5d76937448dae43ab
   "tool": "0",
-  "turn": "4",
+  "turn": "0",
   "vexp": "0",
-  "virt": "4"
+  "virt": "0"
 }
