@@ -49,7 +49,8 @@ public class GUI implements ActionListener {
 	private JButton submitButton;
 	private JButton clearButton;
 	private JButton readLLocalDatabaseButton;
-	private JTextField resultField;
+	private JTextArea resultArea;
+	private JTextField thresholdField;
 	private EffortEstimation effortEstimation;
 	private JSONDatabase database;
 
@@ -75,7 +76,8 @@ public class GUI implements ActionListener {
 	 */
 	private void initGUI(String[] defaultLabels) {
 		
-		JPanel mainPanelSouth  = new JPanel();
+		JPanel mainPanelSouthNorth  = new JPanel();
+		JPanel mainPanelSouth = new JPanel();
 		JPanel mainPanelNorth = new JPanel();
 		// Label for the windows
 		JFrame frame = new JFrame(WINDOW_TITLE);
@@ -99,15 +101,23 @@ public class GUI implements ActionListener {
 		submitButton.addActionListener(this);
 		clearButton.addActionListener(this);
 		
-		resultField = new JTextField();
-		resultField.setText(RESULT_BUTTON_LABEL);
-		mainPanelSouth.add(resultField, BorderLayout.SOUTH);
+		resultArea = new JTextArea(5,30);
+		resultArea.setEditable(false);
+		resultArea.setText("Result:");
+		
+		JLabel threshLbl = new JLabel("Threshold for similarity function (default = 80%):");
+		thresholdField = new JTextField(5);
+		
+		mainPanelSouthNorth.add(resultArea, BorderLayout.NORTH);
+		mainPanelSouthNorth.add(threshLbl, BorderLayout.SOUTH);
+		mainPanelSouthNorth.add(thresholdField, BorderLayout.SOUTH);
+		
+		mainPanelSouth.add(mainPanelSouthNorth, BorderLayout.NORTH);
+		
 		mainPanelSouth.add(submitButton, BorderLayout.SOUTH);
 		mainPanelSouth.add(clearButton, BorderLayout.SOUTH);
 
 		matrixPanel = new JTextField[ROWS][COLUMNS];
-		mainPanelSouth.add(submitButton);
-		mainPanelSouth.add(clearButton);
 		frame.add(mainPanelNorth, BorderLayout.NORTH);
 		frame.add(mainPanelGrid, BorderLayout.CENTER);
 		frame.add(mainPanelSouth, BorderLayout.SOUTH);
@@ -163,7 +173,10 @@ public class GUI implements ActionListener {
 //			System.out.println("Key = " + s + " Value = " + project.get(s));
 //		}
 		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
-		resultField.setText(result);
+		int nbrProjects = effortEstimation.nbrOfProjectsInLastEstimation();
+		resultArea.setText("Result:\n\n");
+		resultArea.append("Estimated effort: " + result + " person months\n");
+		resultArea.append("Based on " + nbrProjects + " projects");
 		project.put("effort", result);
 		writeToFile(project);
 	}
@@ -220,6 +233,17 @@ public class GUI implements ActionListener {
 						allFieldsValid = false;
 					}
 				}
+			}
+		}
+		if (thresholdField.getText().isEmpty() || thresholdField.getText() == null) {
+			effortEstimation.setThreshold(effortEstimation.SIMILARITY_THRESHOLD);
+		} else {
+			try {
+				double threshold = Double.parseDouble(thresholdField.getText());
+				effortEstimation.setThreshold(threshold / 100);
+			} catch (NumberFormatException e) {
+				thresholdField.setText(""+effortEstimation.SIMILARITY_THRESHOLD*100);
+				effortEstimation.setThreshold(effortEstimation.SIMILARITY_THRESHOLD);
 			}
 		}
 		return allFieldsValid;

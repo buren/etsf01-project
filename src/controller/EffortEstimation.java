@@ -16,18 +16,15 @@ public class EffortEstimation {
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
 		"MODP", "TOOL", "SCED", "Size[kloc]", "temp1", "temp2", "temp3", "temp4" };
-
+	public double SIMILARITY_THRESHOLD = 0.80;
 	
-	/*********************************************
-	 * PRIVATE CONSTANTS
-	 *********************************************/
-	private double SIMILARITY_THRESHOLD = 0.80;
 	/*********************************************
 	 * CLASS OBJECTS
 	 *********************************************/
 	
 	private JSONObject database;
 	private double threshold;
+	private int nbrOfProjectsUsed;
 	
 
 	/*********************************************
@@ -52,6 +49,10 @@ s	 */
 	public EffortEstimation(JSONObject database) {
 		this.database = database;
 		this.threshold = 0.5;
+	}
+	
+	public void setThreshold(double threshold) {
+		this.threshold = threshold; 
 	}
 	
 	/**
@@ -86,7 +87,7 @@ s	 */
 					}
 				}
 				double similarity = 1 - Math.sqrt(distanceSum/nbrOfAttributes);
-				if (similarity > SIMILARITY_THRESHOLD && similarity < 1) {
+				if (similarity > threshold && similarity < 1) {
 					project.put("similarity", similarity);
 					listOfSimilarProjects.put(index, project);	
 				}
@@ -162,6 +163,7 @@ s	 */
 		double effort = 0;
 		double similarity = 0;
 		JSONObject listOfSimilarProjects = calculateSimilarity(futureProject);
+		nbrOfProjectsUsed = listOfSimilarProjects.length();
 		Iterator it = listOfSimilarProjects.sortedKeys();
 		int count = 0;
 		while (it.hasNext()) {
@@ -192,5 +194,9 @@ s	 */
 	public int calculateEffortForProject(HashMap<String, String> futureProject){
 		int effort = calculateEffortEstimation(new JSONObject(futureProject));
 		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));
+	}
+
+	public int nbrOfProjectsInLastEstimation() {
+		return nbrOfProjectsUsed;
 	}
 }
