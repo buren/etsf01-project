@@ -46,9 +46,12 @@ public class GUI implements ActionListener {
 	private JPanel mainPanelGrid;
 	private JTextField matrixBoxValue;
 	private JTextField[][] matrixPanel;
+	private JLabel[] fieldLabels;
 	private JButton submitButton;
 	private JButton clearButton;
 	private JButton readLLocalDatabaseButton;
+	private JTextField databasePathField;
+	private JButton addExternalDatabaseButton;
 	private JTextArea resultArea;
 	private JTextField thresholdField;
 	private EffortEstimation effortEstimation;
@@ -67,7 +70,7 @@ public class GUI implements ActionListener {
 	public GUI() {
 		this.database = JSONDatabase.getInstance();
 		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
-		initGUI(database.getDefaultLables());
+		initGUI(database.getDefaultLabels());
 	}
 		
 	/** 
@@ -93,6 +96,11 @@ public class GUI implements ActionListener {
 		mainPanelNorth.add(readLLocalDatabaseButton, BorderLayout.NORTH);
 		mainPanelNorth.add(readLLocalDatabaseButton);
 		readLLocalDatabaseButton.addActionListener(this);
+		databasePathField = new JTextField("Enter path to database file");
+		mainPanelNorth.add(databasePathField);
+		addExternalDatabaseButton = new JButton("Use external database");
+		mainPanelNorth.add(addExternalDatabaseButton);
+		addExternalDatabaseButton.addActionListener(this);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -124,24 +132,24 @@ public class GUI implements ActionListener {
 
 		// Creates the matrix view for the GUI 
 		int index = 0;
+		fieldLabels = new JLabel[ROWS * COLUMNS];
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLUMNS; c++) {
-				JLabel typeLabel;
 				if(defaultLabels.length <= index || defaultLabels == null){
-					typeLabel = new JLabel("Label " + index++ + ": ", SwingConstants.RIGHT);
+					fieldLabels[index] = new JLabel("Label " + index++ + ": ", SwingConstants.RIGHT);
 				}else{
-					typeLabel = new JLabel(defaultLabels[index++] + ": ", SwingConstants.RIGHT);
+					fieldLabels[index] = new JLabel(defaultLabels[index++] + ": ", SwingConstants.RIGHT);
 				}
-//				int textFieldSize = Math.max(ERR_MSG_INTERVAL.length(), ERR_MSG_FORMAT.length());
 				int textFieldSize = 8;
 				matrixBoxValue = new JTextField(textFieldSize);
 				matrixBoxValue.setBackground(Color.LIGHT_GRAY);
 				matrixBoxValue.setFont(new Font("Verdana", Font.BOLD, 10));
 				matrixPanel[r][c] = matrixBoxValue;
-				mainPanelGrid.add(typeLabel);
+				mainPanelGrid.add(fieldLabels[index - 1]);
 				mainPanelGrid.add(matrixBoxValue);
 			}
 		}
+		fieldLabels[0].setText("snopp");
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -195,11 +203,30 @@ public class GUI implements ActionListener {
 			clearGUI();
 		}else if (e.getSource().equals(readLLocalDatabaseButton)){
 			readLocalDatabase();
+		} else if (e.getSource().equals(addExternalDatabaseButton)) {
+			boolean madeIt = database.addDatabase(databasePathField.getText());
+			if (!madeIt) {
+				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			updateLabels(database.getDefaultLabels());
 		}
 			
 	}	
 	
 	
+	private void updateLabels(String[] labels) {
+		int index = 0;
+		for (int r = 0; r < ROWS; r++) {
+			for (int c = 0; c < COLUMNS; c++) {
+				if(labels.length <= index || labels == null){
+					fieldLabels[index].setText("Label " + index++ + ": ");
+				}else{
+					fieldLabels[index].setText(labels[index++] + ": ");
+				}
+			}
+		}
+	}
+
 	/*********************************************
 	 * PRIVATE HELPER METHODS
 	 *********************************************/
@@ -254,8 +281,7 @@ public class GUI implements ActionListener {
 	/**
 	 * Clears the GUI from all inputs, to default values
 	 */
-	private void clearGUI() {
-		// TODO: actionPerformed doesn't recognize that the user has pressed the Clear button. 
+	private void clearGUI() { 
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
 				matrixPanel[row][col].setText("");

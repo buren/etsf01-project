@@ -102,8 +102,30 @@ public class JSONDatabase
      * @param delimiter the delimiter to be used. 
      * @param ignorePattern lines beginning with this pattern will be ignored. 
      * @param numberOfAttributes which columns will be included. 
+     * 
+     * @return true if the database was successfully added, false if there was a problem with the file format
      */
-    public synchronized void addDatabase(String inputPath, String delimiter, String ignorePattern, String includedColumns, String[] valueNames, int timeUnit){
+    public synchronized boolean addDatabase(String inputPath){
+    	//Reads the database specification options
+    	JSONObject opts = fileHandler.readOptions(inputPath);
+    	if (opts == null) {
+    		return false;
+    	}
+    	String delimiter = null; String ignorePattern = null; String includedColumns = null; String[] valueNames = null; int timeUnit = 0;
+		try {
+			delimiter = opts.getString("delim");
+			ignorePattern = opts.getString("ignore");
+			if (!ignorePattern.contains("#")) {
+				//The '#' character is reserved for the options lines and must be included in the ignore pattern
+				ignorePattern = ignorePattern + "#";
+			}
+			includedColumns = opts.getString("cols");
+			valueNames = (String[]) opts.get("values");
+			timeUnit = opts.getInt("time");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     	// Reads the database
     	//TODO: Find a pretty way to append data to the jsonObject
     	try {
@@ -113,6 +135,7 @@ public class JSONDatabase
     	} catch (JSONException e) {
 			System.err.println("JSONDatabase.addDatabase(): JSONTokener failed!");
 		}
+    	return true;
     }
     
     /**
@@ -221,7 +244,7 @@ public class JSONDatabase
 
 
 
-	public String[] getDefaultLables() {
+	public String[] getDefaultLabels() {
 		return fileHandler.getCurrentLabels();
 	}
     
