@@ -59,7 +59,7 @@ public class FileHandler {
 			int nbrOfOptsFound = 0;
 			try {
 				while (nbrOfOptsFound < 5) {
-					if (line == null) {
+					if (line == null || !line.startsWith("#option")) {
 						//File does not follow filespec
 						return null;
 					}
