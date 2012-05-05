@@ -36,7 +36,7 @@ public class GUI implements ActionListener {
 	private static final String RESULT_BUTTON_LABEL = "Result in [pm]";
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
-	private static final String READ_LOCAL_DATABASE_BUTTON_LABEL = "Read local databases";
+	private static final String READ_DEFAULT_DATABASE_BUTTON_LABEL = "Read default databases";
 	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
 	private static final String ERR_MSG_FORMAT = "Enter number!";
 
@@ -49,9 +49,9 @@ public class GUI implements ActionListener {
 	private JLabel[] fieldLabels;
 	private JButton submitButton;
 	private JButton clearButton;
-	private JButton readLLocalDatabaseButton;
+	private JButton readDefaultDatabaseButton;
 	private JTextField databasePathField;
-	private JButton addExternalDatabaseButton;
+	private JButton addCustomDatabaseButton;
 	private JTextArea resultArea;
 	private JTextField thresholdField;
 	private EffortEstimation effortEstimation;
@@ -92,15 +92,15 @@ public class GUI implements ActionListener {
 		// Default size of the window
 		frame.setSize(850, 600);
 		
-		readLLocalDatabaseButton = new JButton(READ_LOCAL_DATABASE_BUTTON_LABEL);
-		mainPanelNorth.add(readLLocalDatabaseButton, BorderLayout.NORTH);
-		mainPanelNorth.add(readLLocalDatabaseButton);
-		readLLocalDatabaseButton.addActionListener(this);
+		readDefaultDatabaseButton = new JButton(READ_DEFAULT_DATABASE_BUTTON_LABEL);
+		mainPanelNorth.add(readDefaultDatabaseButton, BorderLayout.NORTH);
+		mainPanelNorth.add(readDefaultDatabaseButton);
+		readDefaultDatabaseButton.addActionListener(this);
 		databasePathField = new JTextField("Enter path to database file");
 		mainPanelNorth.add(databasePathField);
-		addExternalDatabaseButton = new JButton("Use external database");
-		mainPanelNorth.add(addExternalDatabaseButton);
-		addExternalDatabaseButton.addActionListener(this);
+		addCustomDatabaseButton = new JButton("Use external database");
+		mainPanelNorth.add(addCustomDatabaseButton);
+		addCustomDatabaseButton.addActionListener(this);
 		
 		// Inits buttons and result field and adds them to the layout
 		submitButton = new JButton(SUBMIT_BUTTON_LABEL);
@@ -201,9 +201,10 @@ public class GUI implements ActionListener {
 		}		
 		else if (e.getSource().equals(clearButton)){
 			clearGUI();
-		}else if (e.getSource().equals(readLLocalDatabaseButton)){
-			readLocalDatabase();
-		} else if (e.getSource().equals(addExternalDatabaseButton)) {
+		}else if (e.getSource().equals(readDefaultDatabaseButton)){
+			readDefaultDatabase();
+			updateLabels(database.getDefaultLabels());
+		} else if (e.getSource().equals(addCustomDatabaseButton)) {
 			boolean madeIt = database.addDatabase(databasePathField.getText());
 			if (!madeIt) {
 				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file", "Error", JOptionPane.ERROR_MESSAGE);
@@ -232,7 +233,7 @@ public class GUI implements ActionListener {
 	 *********************************************/
 	
 	
-	private void readLocalDatabase() {
+	private void readDefaultDatabase() {
 		database.readLocalDatabase();
 	}
 	
