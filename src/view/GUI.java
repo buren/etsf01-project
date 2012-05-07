@@ -56,7 +56,7 @@ public class GUI implements ActionListener {
 	private JTextField thresholdField;
 	private EffortEstimation effortEstimation;
 	private JSONDatabase database;
-
+	private Menu convertMenu; 
 
 	/*********************************************
 	 * CONSTRUCTOR
@@ -85,7 +85,6 @@ public class GUI implements ActionListener {
 		JFrame frame = new JFrame(WINDOW_TITLE);
 		mainPanelGrid = new JPanel(new GridLayout(ROWS, COLUMNS));
 		
-		
 		// Program will exit when pressing the "x" in the top right corner
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Default size of the window
@@ -110,7 +109,7 @@ public class GUI implements ActionListener {
 		
 		resultArea = new JTextArea(5,30);
 		resultArea.setEditable(false);
-		resultArea.setText("Result:");
+		resultArea.setText("Result: (in Person-months)");
 		
 		JLabel threshLbl = new JLabel("Threshold for similarity function (default = 80%):");
 		thresholdField = new JTextField(5);
@@ -128,6 +127,9 @@ public class GUI implements ActionListener {
 		frame.add(mainPanelNorth, BorderLayout.NORTH);
 		frame.add(mainPanelGrid, BorderLayout.CENTER);
 		frame.add(mainPanelSouth, BorderLayout.SOUTH);
+		
+		// Menu for changing units
+		convertMenu = new Menu(frame, resultArea);
 
 		// Creates the matrix view for the GUI 
 		int index = 0;
@@ -181,10 +183,11 @@ public class GUI implements ActionListener {
 //		for (String s : keys) {
 //			System.out.println("Key = " + s + " Value = " + project.get(s));
 //		}
-		String result = String.valueOf(effortEstimation.calculateEffortForProject(project));
+		int unit = convertMenu.getUnit();
+		String result = String.valueOf(effortEstimation.calculateEffortForProject(project, unit));
 		int nbrProjects = effortEstimation.nbrOfProjectsInLastEstimation();
-		resultArea.setText("Result:\n\n");
-		resultArea.append("Estimated effort: " + result + " person months\n");
+		resultArea.setText("Result (in " + convertMenu.getUnitName() + "):\n\n");
+		resultArea.append("Estimated effort: " + result + " " + convertMenu.getUnitName() + "\n");
 		resultArea.append("Based on " + nbrProjects + " projects");
 		project.put("effort", result);
 		writeToFile(project);
@@ -213,7 +216,6 @@ public class GUI implements ActionListener {
 			effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 			updateLabels(database.getDefaultLabels());
 		}
-			
 	}	
 	
 	
@@ -280,8 +282,6 @@ public class GUI implements ActionListener {
 		return allFieldsValid;
 	}
 	
-	
-
 	/**
 	 * Clears the GUI from all inputs, to default values
 	 */
@@ -310,7 +310,4 @@ public class GUI implements ActionListener {
 		} catch (IOException e) {e.printStackTrace();
 		} catch (JSONException e) {e.printStackTrace();}
 	}
-	
-	
-	
 }
