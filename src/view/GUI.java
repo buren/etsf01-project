@@ -26,7 +26,7 @@ public class GUI implements ActionListener {
 	 * PRIVATE CONSTANTS
 	 *********************************************/
 	// Contstants and indentifiers
-	private static final String NO_INPUT = "0";
+	private static final String NO_INPUT = "-1";
 	private static final int ROWS = 5;
 	private static final int COLUMNS = 4;
 	private static final String LINE_ENDING = "\r\n";
@@ -69,7 +69,6 @@ public class GUI implements ActionListener {
 	 */
 	public GUI() {
 		this.database = JSONDatabase.getInstance();
-		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 		initGUI(database.getDefaultLabels());
 	}
 		
@@ -149,7 +148,6 @@ public class GUI implements ActionListener {
 				mainPanelGrid.add(matrixBoxValue);
 			}
 		}
-		fieldLabels[0].setText("snopp");
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -169,10 +167,13 @@ public class GUI implements ActionListener {
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				if(matrixPanel[row][col].getText().equals("")){
-					project.put(EffortEstimation.TYPES[index++].toLowerCase(), NO_INPUT);
-				}else {
-					project.put(EffortEstimation.TYPES[index++].toLowerCase(), matrixPanel[row][col].getText());
+				String[] attributes = database.getDefaultLabels();
+				if (attributes[index] != null) {
+					if (matrixPanel[row][col].getText().equals("")){
+						project.put(attributes[index++].toLowerCase(), NO_INPUT);
+					}else {
+						project.put(attributes[index++].toLowerCase(), matrixPanel[row][col].getText());
+					}
 				}
 			}
 		}
@@ -209,6 +210,7 @@ public class GUI implements ActionListener {
 			if (!madeIt) {
 				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+			effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 			updateLabels(database.getDefaultLabels());
 		}
 			
@@ -235,6 +237,7 @@ public class GUI implements ActionListener {
 	
 	private void readDefaultDatabase() {
 		database.readLocalDatabase();
+		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 	}
 	
 	private boolean validateStartValuesFromGUI(){

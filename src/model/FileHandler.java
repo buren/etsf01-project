@@ -155,7 +155,7 @@ public class FileHandler {
 			}
 			// Adds all the projects to responsJSON with associated UUID
 			for (HashMap<String, String> map : projectList)
-				responsJSON.put(String.valueOf(UUID.randomUUID()), map);
+				responsJSON.put(UUID.randomUUID().toString(), map);
 
 		} catch (FileNotFoundException e) {
 			System.err.println("FileHandler: File not found exception!");
@@ -303,8 +303,8 @@ public class FileHandler {
 	 * Adds all accepted columns to an array.
 	 * 
 	 * @param includedColumns
-	 *            the columns to be included "1-20" argument will result in the
-	 *            included columns {1, 2, 3, .. , 19, 20) "1,2,6" argument will
+	 *            the columns to be included "0-20" argument will result in the
+	 *            included columns {0, 1, 2, 3, .. , 19, 20) "1,2,6" argument will
 	 *            reuslt in {1,2,6} "1,5,8-12" argument will result in
 	 *            {1,5,8,9,10,11,12}
 	 */
