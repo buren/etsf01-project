@@ -9,8 +9,6 @@ import conversion.Converter;
 
 public class JSONDatabase 
 {
-
-	
 	/*********************************************
 	 * public constants
 	 *********************************************/
@@ -113,10 +111,12 @@ public class JSONDatabase
 		}
     	// Reads the database
     	//TODO: Find a pretty way to append data to the jsonObject
+		JSONObject newDb = fileHandler.readDatabase(inputPath, delimiter, ignorePattern, includedColumns, valueNames, timeUnit);
+		if (newDb == null) {
+			return false;
+		}
     	try {
-			String db = fileHandler.readDatabase(inputPath, delimiter, ignorePattern, includedColumns, valueNames, timeUnit).toString();
-//    		String db = fileHandler.readDatabase(inputPath, delimiter, ignorePattern, includedColumns, valueNames, timeUnit).toString();
-			JSONTokener tokener = new JSONTokener(db);
+			JSONTokener tokener = new JSONTokener(newDb.toString());
 			jsonObject = new JSONObject(tokener);
     	} catch (JSONException e) {
 			System.err.println("JSONDatabase.addDatabase(): JSONTokener failed!");

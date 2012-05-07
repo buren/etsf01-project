@@ -146,6 +146,7 @@ public class FileHandler {
 			} else {
 				return null;
 			}
+			
 
 			while (line != null) {
 				// Adds each project (one line) to projectList
@@ -164,7 +165,17 @@ public class FileHandler {
 		} catch (JSONException e) {
 			System.err.println("FileHandler JSONException!");
 		}
-		return responsJSON;
+		boolean hasEffortColumn = false;
+		for (String col : colNames) {
+			if (col != null && col.equals("effort[pm]")) {
+				hasEffortColumn = true;
+			}
+		}
+		if (hasEffortColumn) {
+			return responsJSON;
+		} else {
+			return null;
+		}
 	}
 
 	public String[] getCurrentLabels() {

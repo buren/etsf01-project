@@ -211,7 +211,7 @@ public class GUI implements ActionListener {
 		} else if (e.getSource().equals(addCustomDatabaseButton)) {
 			boolean madeIt = database.addDatabase(databasePathField.getText());
 			if (!madeIt) {
-				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file or missing \"Effort[pm]\" column.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 			updateLabels(database.getDefaultLabels());
