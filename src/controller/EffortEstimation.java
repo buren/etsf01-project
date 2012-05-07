@@ -191,9 +191,16 @@ s	 */
 	 * @param futureProject - the project to be estimated
 	 * @return the time estimation for the project
 	 */
-	public int calculateEffortForProject(HashMap<String, String> futureProject){
+	public int calculateEffortForProject(HashMap<String, String> futureProject, int unit){
 		int effort = calculateEffortEstimation(new JSONObject(futureProject));
-		return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));
+		if (unit == Converter.DAYS) {
+			return (int) Math.round(Converter.convertToDays(Converter.HOURS, effort));	
+		} else if (unit == Converter.MONTHS) {
+			return (int) Math.round(Converter.convertToMonths(Converter.HOURS, effort));	
+		} else if (unit == Converter.YEARS) {
+			return (int) Math.round(Converter.convertToYears(Converter.HOURS, effort));	
+		}
+		return (int) Math.round(effort);
 	}
 
 	public int nbrOfProjectsInLastEstimation() {

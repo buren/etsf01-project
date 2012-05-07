@@ -1,0 +1,16 @@
+#OPTION DELIM ,
+#OPTION IGNORE %@
+#OPTION COLS 0-10
+#OPTION VALUES ett,två,tre,fyra,fem,sex
+#OPTION TIME 2
+Harald,är,en,riktig,feting,han,är,lätt,min,stora,idol,Effort[pm]
+fyra,två,ett,tre,fem,tre,fem,ett,fem,ett,fem,180
+fyra,fem,ett,tre,ett,ett,fem,fyra,tre,fyra,ett,2500
+ett,fem,fem,tre,fem,ett,två,ett,två,fem,ett,34
+fyra,ett,fem,ett,ett,tre,fem,två,två,två,fyra,654
+två,fem,två,tre,fyra,fem,fyra,fem,två,tre,tre,782
+fyra,tre,två,fem,fyra,två,fem,tre,två,ett,fem,450
+tre,fyra,tre,fem,fyra,två,tre,två,tre,ett,fem,450
+två,fyra,fyra,två,fem,fem,två,tre,två,ett,fem,350
+tre,ett,två,tre,två,två,fyra,ett,ett,fem,tre,3210
+fyra,tre,tre,fyra,två,ett,fem,tre,ett,fem,fem,60
