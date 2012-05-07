@@ -78,7 +78,7 @@ s	 */
 					if (!attribute.equals("effort[pm]") && !attribute.equals("similarity")) {
 						if (futureProject.has(attribute)) {
 							futureValue = Double.parseDouble(futureProject.get(attribute).toString());
-							if (futureValue > 0) {
+							if (futureValue >= 0) {
 								double oldValue = Double.parseDouble(project.get(attribute).toString());
 								distanceSum += weight(attribute) * distance(futureValue, oldValue, maxDistance);
 								nbrOfAttributes++;

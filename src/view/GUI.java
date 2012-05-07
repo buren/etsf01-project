@@ -213,7 +213,6 @@ public class GUI implements ActionListener {
 			}
 			updateLabels(database.getDefaultLabels());
 		}
-			
 	}	
 	
 	

@@ -1,12 +1,12 @@
 {
   "acap": "2",
-  "aexp": "0",
+  "aexp": "2",
   "cplx": "2",
   "data": "2",
-  "effort": "47",
+  "effort": "28",
   "lexp": "0",
   "modp": "0",
-  "pcap": "0",
+  "pcap": "2",
   "rely": "2",
   "sced": "0",
   "size[kloc]": "0",
@@ -17,7 +17,7 @@
   "temp4": "0",
   "time": "2",
   "tool": "0",
-  "turn": "3",
-  "vexp": "0",
+  "turn": "2",
+  "vexp": "2",
   "virt": "2"
 }
