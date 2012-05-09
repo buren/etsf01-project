@@ -37,7 +37,7 @@ public class GUI implements ActionListener {
 	private static final String CLEAR_BUTTON_LABEL = "Clear";
 	private static final String SUBMIT_BUTTON_LABEL = "Submit";
 	private static final String READ_DEFAULT_DATABASE_BUTTON_LABEL = "Read default databases";
-	private static final String ERR_MSG_INTERVAL = "Allowed: 1-6";
+	private static final String ERR_MSG_INTERVAL = "Allowed: 0-5";
 	private static final String ERR_MSG_FORMAT = "Enter number!";
 
 	/*********************************************
@@ -250,7 +250,7 @@ public class GUI implements ActionListener {
 				}else{
 					try{
 						int value = Integer.parseInt((matrixPanel[row][col].getText()));
-						if (value < 0 || value > 6){
+						if (value < 0 || value > 5){
 							matrixPanel[row][col].setBackground(Color.RED);
 							matrixPanel[row][col].setText(ERR_MSG_INTERVAL);
 							allFieldsValid = false;
