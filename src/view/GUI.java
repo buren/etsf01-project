@@ -69,7 +69,12 @@ public class GUI implements ActionListener {
 	 */
 	public GUI() {
 		this.database = JSONDatabase.getInstance();
-		initGUI(database.getDefaultLabels());
+		String[] emptyLabels = new String[20];
+		String empty = "Empty";
+		for (int i = 0; i < 20; i++) {
+			emptyLabels[i] = empty;
+		}
+		initGUI(emptyLabels);
 	}
 		
 	/** 
@@ -169,7 +174,7 @@ public class GUI implements ActionListener {
 		int index = 0;
 		for (int row = 0; row < ROWS; row++) {
 			for (int col = 0; col < COLUMNS; col++) {
-				String[] attributes = database.getDefaultLabels();
+				String[] attributes = database.getCurrentLabels();
 				if (attributes[index] != null) {
 					if (matrixPanel[row][col].getText().equals("")){
 						project.put(attributes[index++].toLowerCase(), NO_INPUT);
@@ -207,14 +212,14 @@ public class GUI implements ActionListener {
 			clearGUI();
 		}else if (e.getSource().equals(readDefaultDatabaseButton)){
 			readDefaultDatabase();
-			updateLabels(database.getDefaultLabels());
+			updateLabels(database.getCurrentLabels());
 		} else if (e.getSource().equals(addCustomDatabaseButton)) {
 			boolean madeIt = database.addDatabase(databasePathField.getText());
 			if (!madeIt) {
 				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file or missing \"Effort[pm]\" column.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
-			updateLabels(database.getDefaultLabels());
+			updateLabels(database.getCurrentLabels());
 		}
 	}	
 	
@@ -238,7 +243,7 @@ public class GUI implements ActionListener {
 	
 	
 	private void readDefaultDatabase() {
-		database.readLocalDatabase();
+		database.readDefaultDatabase();
 		effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
 	}
 	

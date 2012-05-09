@@ -128,7 +128,7 @@ public class JSONDatabase
      * Reads two of the locally stored database files. 
      * And adds them to the JSONObject.
      */
-    public synchronized void readLocalDatabase(){
+    public synchronized void readDefaultDatabase(){
     	//TODO: Find a pretty way to append data to the jsonObjects
 		String db = "";
 		db += fileHandler.readDatabase(DATABASE_INPUT_PATH_FIRST, DEFAULT_DELIMITER, DEFAULT_IGNORE_PATTERNS, DEFAULT_COLUMNS_FIRST, VALUE_NAMES_FIRST, Converter.MONTHS).toString();
@@ -230,7 +230,7 @@ public class JSONDatabase
 
 
 
-	public String[] getDefaultLabels() {
+	public String[] getCurrentLabels() {
 		return fileHandler.getCurrentLabels();
 	}
     
