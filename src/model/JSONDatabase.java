@@ -15,13 +15,13 @@ public class JSONDatabase
 	// TODO: This is too long because of the offset in databaseAlt2. FIX IT!
 	public static final String[] TYPES = { "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "RELY", "DATA", "CPLX", "TIME",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort", "Project", "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "RELY", "DATA", "CPLX", "TIME",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort", "Project", "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project", "RELY", "DATA", "CPLX", "TIME",
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort", "Project", "RELY", "DATA", "CPLX", "TIME",
 		"STOR", "VIRT", "TURN", "ACAP", "AEXP", "PCAP", "VEXP", "LEXP",
-		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort[pm]", "Project" };
+		"MODP", "TOOL", "SCED", "Size[kloc]", "Effort", "Project" };
 	
 	/*********************************************
 	 * private constants and deafult values

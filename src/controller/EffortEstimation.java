@@ -75,7 +75,7 @@ s	 */
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
 					double maxDistance = maximumDistance(attribute);
-					if (!attribute.contains("effort[pm]") && !attribute.equals("similarity")) {
+					if (!attribute.contains("effort") && !attribute.equals("similarity")) {
 						if (futureProject.has(attribute)) {
 							futureValue = Double.parseDouble(futureProject.get(attribute).toString());
 							if (futureValue >= 0) {
@@ -170,7 +170,7 @@ s	 */
 			count++;
 			try {
 				JSONObject proj = database.getJSONObject((String) it.next());
-				effort = Double.parseDouble(proj.getString("effort[pm]"));
+				effort = Double.parseDouble(proj.getString("effort"));
 				similarity = Double.parseDouble(proj.getString("similarity"));
 			} catch (NumberFormatException e) {
 				System.err.println("EffortEstimation.calculateTimeEstimation: Bad effort value in database");

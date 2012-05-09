@@ -223,7 +223,7 @@ public class GUI implements ActionListener {
 				updateLabels(database.getCurrentLabels());
 				submitButton.setEnabled(true);				
 			} else {
-				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file or missing \"Effort[pm]\" column.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file or missing \"Effort\" column.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}	
@@ -290,7 +290,7 @@ public class GUI implements ActionListener {
 				if(labels.length <= index || labels[index] == null){
 					fieldLabels[index++].setText("Empty" + ": ");
 					matrixPanel[r][c].setEnabled(false);
-				}else if (labels[index].equals("effort[pm]")) {
+				}else if (labels[index].equals("effort")) {
 					fieldLabels[index++].setText("Empty" + ": ");
 					matrixPanel[r][c].setEnabled(false);
 				}else{

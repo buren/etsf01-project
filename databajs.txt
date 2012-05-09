@@ -3,7 +3,7 @@
 #OPTION COLS 0-10
 #OPTION VALUES ett,två,tre,fyra,fem,sex
 #OPTION TIME 2
-Harald,är,en,riktig,feting,han,är,lätt,min,stora,idol,Effort[pm]
+Harald,är,en,riktig,feting,han,är,lätt,min,stora,idol,Effort
 fyra,två,ett,tre,fem,tre,fem,ett,fem,ett,fem,180
 fyra,fem,ett,tre,ett,ett,fem,fyra,tre,fyra,ett,2500
 ett,fem,fem,tre,fem,ett,två,ett,två,fem,ett,34
