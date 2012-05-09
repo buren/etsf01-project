@@ -111,6 +111,8 @@ public class GUI implements ActionListener {
 		// Adds actionsListeners for both submit- and clear buttons
 		submitButton.addActionListener(this);
 		clearButton.addActionListener(this);
+		//Disable submitButton until database is loaded
+		submitButton.setEnabled(false);
 		
 		resultArea = new JTextArea(5,30);
 		resultArea.setEditable(false);
@@ -212,31 +214,21 @@ public class GUI implements ActionListener {
 			clearGUI();
 		}else if (e.getSource().equals(readDefaultDatabaseButton)){
 			readDefaultDatabase();
+			submitButton.setEnabled(true);
 			updateLabels(database.getCurrentLabels());
 		} else if (e.getSource().equals(addCustomDatabaseButton)) {
 			boolean madeIt = database.addDatabase(databasePathField.getText());
-			if (!madeIt) {
+			if (madeIt) {
+				effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
+				updateLabels(database.getCurrentLabels());
+				submitButton.setEnabled(true);				
+			} else {
 				JOptionPane.showMessageDialog(null, "Error opening file or file is not a database file or missing \"Effort[pm]\" column.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			effortEstimation = new EffortEstimation(database.getDatabaseAsJSONObject());
-			updateLabels(database.getCurrentLabels());
 		}
 	}	
 	
 	
-	private void updateLabels(String[] labels) {
-		int index = 0;
-		for (int r = 0; r < ROWS; r++) {
-			for (int c = 0; c < COLUMNS; c++) {
-				if(labels.length <= index || labels == null){
-					fieldLabels[index].setText("Label " + index++ + ": ");
-				}else{
-					fieldLabels[index].setText(labels[index++] + ": ");
-				}
-			}
-		}
-	}
-
 	/*********************************************
 	 * PRIVATE HELPER METHODS
 	 *********************************************/
@@ -253,8 +245,8 @@ public class GUI implements ActionListener {
 			for (int col = 0; col < COLUMNS; col++) {
 				if(matrixPanel[row][col].getText().equals("")){
 					matrixPanel[row][col].setBackground(Color.DARK_GRAY);
-				} else if (row == 3 && col == 3) {
-					// Size[kloc]
+				} else if (fieldLabels[row*COLUMNS+col].getText().equals("size[kloc]: ")) {
+					// Do nothing if the current field is Size[kloc]
 				}else{
 					try{
 						int value = Integer.parseInt((matrixPanel[row][col].getText()));
@@ -286,6 +278,29 @@ public class GUI implements ActionListener {
 		}
 		return allFieldsValid;
 	}
+	
+	/**
+	 * Updates the text labels after reading a new database
+	 * @param labels
+	 */
+	private void updateLabels(String[] labels) {
+		int index = 0;
+		for (int r = 0; r < ROWS; r++) {
+			for (int c = 0; c < COLUMNS; c++) {
+				if(labels.length <= index || labels[index] == null){
+					fieldLabels[index++].setText("Empty" + ": ");
+					matrixPanel[r][c].setEnabled(false);
+				}else if (labels[index].equals("effort[pm]")) {
+					fieldLabels[index++].setText("Empty" + ": ");
+					matrixPanel[r][c].setEnabled(false);
+				}else{
+					fieldLabels[index].setText(labels[index++] + ": ");
+					matrixPanel[r][c].setEnabled(true);
+				}
+			}
+		}
+	}
+
 	
 	/**
 	 * Clears the GUI from all inputs, to default values

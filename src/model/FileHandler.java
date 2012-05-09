@@ -167,7 +167,7 @@ public class FileHandler {
 		}
 		boolean hasEffortColumn = false;
 		for (String col : colNames) {
-			if (col != null && col.contains("effort")) {
+			if (col != null && col.equals("effort[pm]")) {
 				hasEffortColumn = true;
 			}
 		}
@@ -226,7 +226,7 @@ public class FileHandler {
 		int columnNamesIndex = 0;
 		colNames = new String[20];
 		for (Integer index : includedColumns) {
-			if (columnNames[index].contains("effort")) {
+			if (columnNames[index].equals("effort[pm]")) {
 				project.put(columnNames[index], String.valueOf(Converter.convertToHours(timeUnit, Double.parseDouble(attributes[index]))));
 				colNames[columnNamesIndex++] = String.valueOf(columnNames[index]);
 			} else {
@@ -234,6 +234,9 @@ public class FileHandler {
 						convertToDigits(attributes[index], valueNames));
 				colNames[columnNamesIndex++] = String.valueOf(columnNames[index]);
 			}
+		}
+		for (int i = columnNamesIndex; i < 20; i++) {
+			colNames[i] = null;
 		}
 		return project;
 	}

@@ -75,7 +75,7 @@ s	 */
 				while (projIter.hasNext()) {
 					String attribute = (String) projIter.next();
 					double maxDistance = maximumDistance(attribute);
-					if (!attribute.equals("effort[pm]") && !attribute.equals("similarity")) {
+					if (!attribute.contains("effort[pm]") && !attribute.equals("similarity")) {
 						if (futureProject.has(attribute)) {
 							futureValue = Double.parseDouble(futureProject.get(attribute).toString());
 							if (futureValue >= 0) {
@@ -113,7 +113,7 @@ s	 */
 	 * @return
 	 */
 	private double maximumDistance(String attribute) {
-		if (!attribute.equals("size[kloc]")) {
+		if (!attribute.contains("size[kloc]")) {
 			return 5;
 		}
 		double min = Integer.MAX_VALUE;
