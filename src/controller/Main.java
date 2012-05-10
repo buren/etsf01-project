@@ -2,7 +2,6 @@ package controller;
 
 import view.GUI;
 
-import model.JSONDatabase;
 
 public class Main {
 
